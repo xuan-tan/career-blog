@@ -1,6 +1,7 @@
 baseURL = "https://xuan-tan.github.io/xuan-career/"
 title = "Xuan.T Career Site"
 languageCode = "en"
+theme="adritian-free-hugo-theme"
 
 # Exclude footer section from generating list pages (index.html and index.xml)
 [outputs]
