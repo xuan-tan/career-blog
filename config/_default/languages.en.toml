@@ -1,7 +1,7 @@
 languageCode = "en"
 languageName = "English"
 weight = 1
-title = "Blowfish"
+title = "Xuan T."
 
 [params]
   displayName = "English"
@@ -15,7 +15,7 @@ title = "Blowfish"
   name = "Xuan T."
   email = "xuantan.co@gmail.com"
   image = "img/blowfish_logo.png"
-  headline = "portfolio of works" 
+  headline = "portfolio of works"
   bio = "making things."
   links = [
     { instagram = "https://instagram.com/xuantt" },
