@@ -1,5 +1,6 @@
 ---
 title: "Career"
+weight: 5
 description: "A Career."
 cascade:
   showEdit: false

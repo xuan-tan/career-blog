@@ -1,6 +1,6 @@
 ---
-title: "Photosets"
-description: "Photosets"
+title: "Odd Works"
+description: "Doing Things."
 cascade:
   showEdit: false
   showSummary: false
@@ -9,9 +9,10 @@ cascade:
 ---
 
 {{< lead >}}
-Amateur shooting in the halfways between film and generative AI.{{< /lead >}}
+Projects that didn't really fit in any buckets!
+{{< /lead >}}
 
-I started shooting more intentionally in 2017. After I had bought my Olympus OMD em5-mkII.
+Do 3D prints count?
 
 _**Sidenote:** This page is just a standard Blowfish article listing and Hugo has been configured to generate a `samples` content type and display article summaries._
 

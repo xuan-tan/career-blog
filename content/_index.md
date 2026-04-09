@@ -3,9 +3,7 @@ title: "Xuan T."
 description: "This page was built using the Blowfish theme for Hugo."
 ---
 
-Welcome to the site, I am happy to have you stop by. I built this site for want
-of keeping track of ideas, words and thoughts that escape me in the tiredness of
-the day.
+Welcome! I am happy to have you stop by. I built this site for want of keeping track of ideas, words and thoughts that escape me in the tiredness of the day.
 
 I hope writing allows me to reclaim a little of that amnesia in a time when AI
 fatigue robs us of original thought.

@@ -1,0 +1,39 @@
+/* Import EB Garamond from Google Fonts */
+@import url("https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap");
+
+/* Override Blowfish CSS variables */
+:root {
+  --font-sans: "EB Garamond", serif !important;
+  --font-serif: "EB Garamond", serif !important;
+}
+
+/* Apply to main elements */
+body,
+article,
+main,
+p,
+span,
+div,
+li {
+  font-family: "EB Garamond", serif !important;
+}
+
+/* Apply to headings */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "EB Garamond", serif !important;
+  font-weight: 600 !important;
+}
+
+/* Keep code blocks monospace */
+code,
+pre,
+kbd,
+samp {
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, "Courier New", monospace !important;
+}

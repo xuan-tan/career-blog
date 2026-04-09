@@ -1,6 +1,6 @@
 ---
-title: "Photosets"
-description: "Photosets"
+title: "Leathercraft"
+description: "Doing Things."
 cascade:
   showEdit: false
   showSummary: false
@@ -9,9 +9,11 @@ cascade:
 ---
 
 {{< lead >}}
-Amateur shooting in the halfways between film and generative AI.{{< /lead >}}
+New forms to hide off an animal's back.
+{{< /lead >}}
 
-I started shooting more intentionally in 2017. After I had bought my Olympus OMD em5-mkII.
+I have always enjoyed the feel of leather under my fingertips.
+Explore via [taxonomy listing]({{< ref "tags" >}}) page.
 
 _**Sidenote:** This page is just a standard Blowfish article listing and Hugo has been configured to generate a `samples` content type and display article summaries._
 
