@@ -1,9 +1,10 @@
 ---
 title: "Japan"
 weight: 5
-draft: false
+layout: "list"
 description: "Japan."
 category: ["Travel"]
+tags: ["JP"]
 ---
 
 The Far East Islands.

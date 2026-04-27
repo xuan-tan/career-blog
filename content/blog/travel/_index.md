@@ -4,8 +4,7 @@ description: "A Compendium of travel logs."
 weight: 1
 cascade:
   showEdit: false
-  showSummary: false
-  hideFeatureImage: true
+  showSummary: true
   invertPagination: true
 ---
 

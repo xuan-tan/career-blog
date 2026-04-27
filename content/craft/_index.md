@@ -4,7 +4,6 @@ description: "a pursuit of making things"
 cascade:
   showEdit: false
   showSummary: false
-  hideFeatureImage: false
   invertPagination: true
 ---
 

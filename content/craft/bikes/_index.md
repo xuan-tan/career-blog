@@ -3,8 +3,7 @@ title: "Bikes"
 description: "A Career."
 cascade:
   showEdit: false
-  showSummary: false
-  hideFeatureImage: true
+  showSummary: true
   invertPagination: true
 ---
 

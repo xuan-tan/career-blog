@@ -1,16 +1,13 @@
 ---
 title: "Birds of Shikoku"
-weight: 5
+weight: 15
 draft: false
-description: "Starting at Onomichi"
-slug: "shimanami-kaido"
-tags: ["2025","JP"]
+description: "exploring birds of shikoku"
+tags: ["2025","JP","Birding"]
 category: ["Travel"]
-series: ["Shimanami Kaido"]
-series_order: 1
 ---
 
-The Shimanami Kaido is a route that crosses the inland Seto sea.
+Where is Shikoku? What are the birds that inhabit this strait?
 
 
 ## Headings

@@ -4,8 +4,9 @@ description: "An attempt to restore order to scattered thoughts."
 cascade:
   showEdit: false
   showSummary: false
-  hideFeatureImage: false
   invertPagination: true
+  showReadingTime: false
+  showViews: false
 ---
 
 {{< lead >}}

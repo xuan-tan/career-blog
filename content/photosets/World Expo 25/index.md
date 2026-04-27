@@ -3,7 +3,7 @@ title: "World Expo Osaka"
 weight: 5
 draft: false
 description: "The World Expo 2025"
-tags: ["2025","Japan",]
+tags: ["2025","Japan","Travel"]
 category: ["Photography"]
 ---
 

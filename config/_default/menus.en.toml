@@ -13,7 +13,7 @@
 [[main]]
   name = "Blog"
   pageRef = "blog"
-  weight = 10
+  weight = 2
 
 [[main]]
   name = "Career"
@@ -25,13 +25,13 @@
   name = "Travel"
   parent = "Blog"
   pageRef = "blog/travel"
-  weight = 20
+  weight = 5
 
 [[main]]
-  name = "Guides"
+  name = "Beak'n'Bork"
   parent = "Blog"
-  pageRef = "blog/guides"
-  weight = 30
+  pageRef = "blog/bnb"
+  weight = 7
 
 [[main]]
   name = "Photosets"
@@ -41,12 +41,12 @@
 [[main]]
   name = "Craft"
   pageRef = "Craft"
-  weight = 20
+  weight = 1
 
 [[main]]
   name = "Bikes"
   parent = "Craft"
-  pageRef = "Bikes"
+  pageRef = "craft/bikes"
   weight = 10
 
 [[main]]

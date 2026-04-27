@@ -3,8 +3,7 @@ title: "Leathercraft"
 description: "Doing Things."
 cascade:
   showEdit: false
-  showSummary: false
-  hideFeatureImage: true
+  showSummary: true
   invertPagination: true
 ---
 

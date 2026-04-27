@@ -4,8 +4,7 @@ description: "2 degrees and 5 years in architecture school"
 
 cascade:
   showEdit: false
-  showSummary: false
-  hideFeatureImage: true
+  showSummary: true
   invertPagination: true
 ---
 

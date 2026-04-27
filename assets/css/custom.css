@@ -37,3 +37,7 @@ samp {
   font-family:
     ui-monospace, SFMono-Regular, Menlo, Monaco, "Courier New", monospace !important;
 }
+
+html {
+    font-size: 14px; /* Default is usually 16px. Try 14px or 15px */
+}

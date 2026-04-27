@@ -5,7 +5,6 @@ description: "A Career."
 cascade:
   showEdit: false
   showSummary: false
-  hideFeatureImage: true
   invertPagination: true
 ---
 

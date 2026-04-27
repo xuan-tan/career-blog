@@ -11,7 +11,7 @@ disableLanguages = [] #to allow translation work requiring shipping to productio
 # pluralizeListTitles = "true" # hugo function useful for non-english languages, find out more in  https://gohugo.io/getting-started/configuration/#pluralizelisttitles
 
 enableRobotsTXT = true
-summaryLength = 30
+summaryLength = 16
 hasCJKLanguage = true
 
 buildDrafts = false
@@ -22,7 +22,7 @@ enableEmoji = true
 googleAnalytics = "G-PEDMYR1V0K"
 
 [pagination]
-  pagerSize = 6
+  pagerSize = 8
 
 [imaging]
   anchor = 'Center'
@@ -71,7 +71,7 @@ googleAnalytics = "G-PEDMYR1V0K"
       type = 'fragments'
       weight = 10
 
-# Render only specific parts of the site for faster development. 
+# Render only specific parts of the site for faster development.
 # Note that there are more files are ignored in development/hugo.toml
 #
 # Usage: `hugo --renderSegments core` or `hugo --renderSegments core,en_only`
