@@ -9,12 +9,9 @@ cascade:
 ---
 
 {{< lead >}}
-2 Degrees and 5 years in architecture school.
+5 years and 2 degrees later.
 {{< /lead >}}
 
-This section documents my explorations in architecture and the system of designing and rationalising space.
-Explore via [taxonomy listing]({{< ref "tags" >}}) page.
-
-_**Sidenote:** This page is under build and will be updated as trips complete and are ready for review.
+This section documents my explorations into architectural design, a way of thinking about and rationalising space and built form.
 
 ---

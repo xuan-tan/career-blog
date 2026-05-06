@@ -25,8 +25,8 @@ disableTextInHeader = false
 # backgroundImageWidth = 1200
 
 defaultBackgroundImage = "/img/background.svg"
-defaultFeaturedImage = "/images/profile.png"
-defaultSocialImage = "/img/blowfish_banner.png"
+defaultFeaturedImage = "/img/featured.svg"
+defaultSocialImage = "/images/profile.png"
 hotlinkFeatureImage = false
 # imagePosition = "50% 50%"
 
@@ -76,7 +76,7 @@ fingerprintAlgorithm = "sha512" # Valid values are "sha512" (default), "sha384",
   showBreadcrumbs = true
   showDraftLabel = true
   showEdit = true
-  editURL = "https://github.com/nunocoracao/blowfish/tree/main/exampleSite/content"
+  editURL = "https://github.com/xuan-tan/career-blog/edit/main/content"
   editAppendPath = true
   seriesOpened = false
   showHeadingAnchors = true
@@ -149,13 +149,6 @@ fingerprintAlgorithm = "sha512" # Valid values are "sha512" (default), "sha384",
 [selineAnalytics]
   # token = "XXXXXX"
   # enableTrackEvent = false
-
-[buymeacoffee]
-  identifier = "nunocoracao"
-  globalWidget = false
-  globalWidgetMessage = ""
-  globalWidgetColor = "#FFDD00"
-  globalWidgetPosition = "right"
 
 [verification]
   # google = ""

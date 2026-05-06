@@ -78,10 +78,10 @@
   pageRef = "about"
   weight = 50
 
-[[main]]
-  name = "Contact"
-  pageRef = "contact"
-  weight = 60
+#[[main]]
+#  name = "Contact"
+#  pageRef = "contact"
+#  weight = 60
 
 #[[main]]
 #  name = "Test"

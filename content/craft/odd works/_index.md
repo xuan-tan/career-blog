@@ -3,7 +3,7 @@ title: "Odd Works"
 description: "Doing Things."
 cascade:
   showEdit: false
-  showSummary: false
+  showSummary: true
   hideFeatureImage: false
   invertPagination: true
 ---

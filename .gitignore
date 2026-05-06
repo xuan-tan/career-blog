@@ -11,3 +11,6 @@ Thumbs.db
 
 # Local hugo binary
 hugo.exe
+
+# Build stats
+hugo_stats.json

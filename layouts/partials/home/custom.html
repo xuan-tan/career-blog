@@ -2,7 +2,8 @@
   Fullscreen hero — 40/60 split, massive cards, center-first offset
 ───────────────────────────────────────────────────────────── */}}
 
-{{ $bgPlaceholder := "images/home-cover.jpg" }}
+{{ $bgDark  := "images/home-cover.jpg" }}
+{{ $bgLight := "images/home-cover-l.jpg" }}
 
 {{/* ─── Carousel data ─── */}}
 {{ $sections := slice }}
@@ -45,13 +46,29 @@
     z-index:1;
     background:#0f172a
   }
+  :root:not(.dark) #hero-root {
+    background:#f5f5f0;
+  }
   @media(min-width:1024px){body{overflow:hidden!important}}
   @media(max-width:1023px){body{overflow:auto!important}#hero-root{height:auto;min-height:100vh;margin-top:-148px}}
 
-  /* ─── Background ─── */
+  /* ─── Background images ─── */
   #hero-bg{position:absolute;inset:0}
   #hero-bg img{width:100%;height:100%;object-fit:cover}
-  #hero-overlay{position:absolute;inset:0;background:linear-gradient(to right,rgba(15,23,42,.85) 0,rgba(15,23,42,.4) 50%,rgba(15,23,42,.7) 100%),linear-gradient(to top,rgba(15,23,42,.6) 0,transparent 50%,rgba(15,23,42,.2) 100%)}
+  #bg-light{display:none}
+  :root:not(.dark) #bg-dark{display:none}
+  :root:not(.dark) #bg-light{display:block}
+  .dark #bg-light{display:none}
+  .dark #bg-dark{display:block}
+
+  /* ─── Overlay ─── */
+  #hero-overlay{position:absolute;inset:0}
+  .dark #hero-overlay {
+    background:linear-gradient(to right,rgba(15,23,42,.85) 0,rgba(15,23,42,.4) 50%,rgba(15,23,42,.7) 100%),linear-gradient(to top,rgba(15,23,42,.6) 0,transparent 50%,rgba(15,23,42,.2) 100%);
+  }
+  :root:not(.dark) #hero-overlay {
+    background:linear-gradient(to right,rgba(245,245,240,.85) 0,rgba(245,245,240,.2) 50%,rgba(245,245,240,.5) 100%),linear-gradient(to top,rgba(245,245,240,.5) 0,transparent 50%,rgba(245,245,240,.15) 100%);
+  }
 
   /* ─── Flex row (30/70) ─── */
   #hero-row{display:flex;height:100%;position:relative;z-index:3;padding-top:148px}
@@ -59,15 +76,29 @@
   /* ─── Left anchor (30%) ─── */
   #anchor{width:30%;display:flex;align-items:center;justify-content:flex-start;padding-left:5vw}
   #anchor-inner{max-width:380px}
-  #anchor-label{font-size:12px;letter-spacing:.35em;text-transform:uppercase;color:rgba(255,255,255,.55);font-weight:400;margin-bottom:14px}
-  #anchor h1{font-size:clamp(3rem,12.5vh,6.5rem);font-weight:800;letter-spacing:-.04em;line-height:.95;color:#fff;margin-bottom:12px}
-  #anchor p{color:rgba(255,255,255,.65);font-size:14px;line-height:1.7;max-width:340px;font-weight:300}
+
+  /* anchor label */
+  #anchor-label{font-size:12px;letter-spacing:.35em;text-transform:uppercase;font-weight:400;margin-bottom:14px}
+  .dark #anchor-label{color:rgba(255,255,255,.55)}
+  :root:not(.dark) #anchor-label{color:rgba(0,0,0,.5)}
+
+  /* anchor title */
+  #anchor h1{font-size:clamp(3rem,12.5vh,6.5rem);font-weight:800;letter-spacing:-.04em;line-height:.95;margin-bottom:12px}
+  .dark #anchor h1{color:#fff}
+  :root:not(.dark) #anchor h1{color:#1a1a1a}
+
+  /* anchor description */
+  #anchor p{font-size:14px;line-height:1.7;max-width:340px;font-weight:300}
+  .dark #anchor p{color:rgba(255,255,255,.65)}
+  :root:not(.dark) #anchor p{color:rgba(0,0,0,.6)}
+
+  /* anchor CTA ghost button */
   #anchor-cta{display:flex;align-items:center;gap:14px;margin-top:28px}
-  .btn-ghost{display:inline-block;border:1px solid rgba(255,255,255,.35);color:#fff;font-size:11px;letter-spacing:.14em;padding:10px 28px;border-radius:999px;text-decoration:none;transition:all .3s}
-  .btn-ghost:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.55)}
-  .btn-circle{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:999px;border:1px solid rgba(255,255,255,.35);color:rgba(255,255,255,.7);text-decoration:none;transition:all .3s}
-  .btn-circle:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.55);color:#fff}
-  .btn-circle svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+  .btn-ghost{display:inline-block;border:1px solid;font-size:11px;letter-spacing:.14em;padding:10px 28px;border-radius:999px;text-decoration:none;transition:all .3s}
+  .dark .btn-ghost{border-color:rgba(255,255,255,.35);color:#fff}
+  .dark .btn-ghost:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.55)}
+  :root:not(.dark) .btn-ghost{border-color:rgba(0,0,0,.25);color:#1a1a1a}
+  :root:not(.dark) .btn-ghost:hover{background:rgba(0,0,0,.05);border-color:rgba(0,0,0,.4)}
 
   /* ─── Right carousel (70%) ─── */
   #carousel-area{width:70%;display:flex;align-items:center;position:relative;z-index:2}
@@ -110,13 +141,15 @@
 
 <div id="hero-root">
 
-  {{/* Background */}}
+  {{/* Background images — Dark + Light (toggled by CSS .dark class) */}}
   <div id="hero-bg">
-    {{ $bg := resources.Get $bgPlaceholder }}
-    {{ if $bg }}
-      <img src="{{ $bg.RelPermalink }}" alt="" aria-hidden="true" loading="eager">
-    {{ else }}
-      <div style="width:100%;height:100%;background:linear-gradient(135deg,#0f172a 0,#1e293b 50%,#0f172a 100%)"></div>
+    {{ $bgD := resources.Get $bgDark }}
+    {{ if $bgD }}
+      <img id="bg-dark" src="{{ $bgD.RelPermalink }}" alt="" aria-hidden="true" loading="eager">
+    {{ end }}
+    {{ $bgL := resources.Get $bgLight }}
+    {{ if $bgL }}
+      <img id="bg-light" src="{{ $bgL.RelPermalink }}" alt="" aria-hidden="true" loading="eager">
     {{ end }}
   </div>
   <div id="hero-overlay"></div>
@@ -126,9 +159,9 @@
     {{/* ── Left anchor ── */}}
     <div id="anchor">
       <div id="anchor-inner">
-        <div id="anchor-label">Designer &amp; Maker</div>
+        <div id="anchor-label">Designer & Maker</div>
         <h1>{{ .Site.Params.Author.name | default "Xuan T." }}</h1>
-        <p>Program Manager, UX Research, AI enthusiast & maker of things.</p>
+        <p>Documenting on the lighter side of life.</p>
         <div id="anchor-cta">
           {{ $bikesUrl := "/craft/bikes" }}
           {{ with $.Site.GetPage "/craft/bikes" }}{{ $bikesUrl = .RelPermalink }}{{ end }}

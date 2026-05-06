@@ -9,7 +9,7 @@ title = "Xuan T."
   rtl = false
   dateFormat = "2 January 2006"
   logo = "images/profile.png"
-  description = "A powerful, lightweight theme for Hugo."
+  description = "A site for documenting lived experiences."
 
 [params.author]
   name = "Xuan T."
