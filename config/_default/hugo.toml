@@ -3,7 +3,7 @@
 # https://blowfish.page/docs/getting-started/
 
 theme = "blowfish"
-baseURL = "https://xuan-tan.github.io/xuan-career/"
+baseURL = "https://xuan-tan.github.io/career-blog/"
 title = "Xuan T. | Portfolio"
 defaultContentLanguage = "en"
 disableLanguages = [] #to allow translation work requiring shipping to production

@@ -1,0 +1,13 @@
+# Hugo build output
+/public/
+/public_local/
+
+# Resources cache
+/resources/_gen/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Local hugo binary
+hugo.exe
