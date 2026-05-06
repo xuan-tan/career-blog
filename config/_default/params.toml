@@ -25,7 +25,7 @@ disableTextInHeader = false
 # backgroundImageWidth = 1200
 
 defaultBackgroundImage = "/img/background.svg"
-defaultFeaturedImage = "/img/featured.svg"
+defaultFeaturedImage = "/images/profile.png"
 defaultSocialImage = "/img/blowfish_banner.png"
 hotlinkFeatureImage = false
 # imagePosition = "50% 50%"
