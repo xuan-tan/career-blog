@@ -11,7 +11,7 @@ cascade:
 Two wheels, drivetrains and a whole lot of elbow grease
 {{< /lead >}}
 
-I can remember when I started falling in love with riding again. It was in the thick of Covid and Singapore had launched its "circuit-breaker" phase.
+I can remember when I started picking up cycling again. It was in the thick of Covid and Singapore had launched its "circuit-breaker" phase.
 
 Explore via [taxonomy listing]({{< ref "tags" >}}) page.
 

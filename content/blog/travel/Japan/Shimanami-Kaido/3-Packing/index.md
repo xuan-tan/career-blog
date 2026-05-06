@@ -3,7 +3,6 @@ title: "Sleepy Morning and a Train Chase"
 weight: 5
 draft: false
 description: "Packing for the train"
-slug: "imabari"
 tags: ["2025","JP","cycling","Shimanami Kaido"]
 category: ["Travel"]
 series: ["Shimanami Kaido"]

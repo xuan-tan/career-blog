@@ -1,6 +1,6 @@
 ---
 title: "a CUES gravel build"
-weight: 5
+weight: 15
 draft: false
 description: "Program Management"
 tags: ["bikes","gravel"]

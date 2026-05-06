@@ -4,7 +4,7 @@ description: "Doing Things."
 cascade:
   showEdit: false
   showSummary: false
-  hideFeatureImage: true
+  hideFeatureImage: false
   invertPagination: true
 ---
 

@@ -1,7 +1,11 @@
 ---
 title: "Career"
 weight: 5
+draft: true
 description: "A Career."
+build:
+  list: never
+  render: never
 cascade:
   showEdit: false
   showSummary: false

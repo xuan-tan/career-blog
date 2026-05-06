@@ -8,16 +8,16 @@ title = "Xuan T."
   isoCode = "en"
   rtl = false
   dateFormat = "2 January 2006"
-  logo = "img/blowfish_logo_transparent.png"
+  logo = "images/profile.png"
   description = "A powerful, lightweight theme for Hugo."
 
 [params.author]
   name = "Xuan T."
   email = "xuantan.co@gmail.com"
-  image = "img/blowfish_logo.png"
-  headline = "portfolio of works"
+  image = "images/profile.png"
+  headline = "Making Things"
   bio = "making things."
   links = [
     { instagram = "https://instagram.com/xuantt" },
-    { github = "https://github.com/nunocoracao/blowfish" },
+    { linkedin = "https://linkedin.com/in/xuantt" },
   ]
