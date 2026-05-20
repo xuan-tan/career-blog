@@ -28,12 +28,6 @@
   weight = 5
 
 [[main]]
-  name = "Beak'n'Bork"
-  parent = "Blog"
-  pageRef = "blog/bnb"
-  weight = 7
-
-[[main]]
   name = "Photosets"
   pageRef = "Photosets"
   weight = 15
