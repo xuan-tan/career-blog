@@ -1,6 +1,6 @@
 ---
 title: "Auckland is Walkable"
-weight: 6
+weight: 2
 draft: false
 description: "Auckland largest city"
 tags: ["2024", "NZ", "Cities"]

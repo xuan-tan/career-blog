@@ -1,30 +1,15 @@
 ---
 title: "Beware the Kea!"
-weight: 5
+weight: 6
 draft: false
 description: "Into Milford Sound"
 tags: ["2024","NZ","Birding"]
 category: ["Travel"]
 ---
 
-Milford sound sits about a 4h drive from the nearest town (although I think it might be generous to call it that) Te Anu.
+Milford Sound sits about a 4h drive from the nearest town (althought it might be generous to call it that) Te Anu.
 
 
-## Headings
-
-The following HTML `<h1>`—`<h6>` elements represent six levels of section headings. `<h1>` is the highest section level while `<h6>` is the lowest.
-
-# H1
-
-## H2
-
-### H3
-
-#### H4
-
-##### H5
-
-###### H6
 
 ## Paragraph
 
