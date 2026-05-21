@@ -106,20 +106,72 @@ html {
   max-width: none;
 }
 
-/* Sticky table headers */
-.article-content table {
-  display: table;
-  overflow: visible;
+/* === Comparison badges (higher/lower than reference) === */
+.article-content code.cmp-higher {
+  color: #1e3a8a !important;
+  background: #dbeafe !important;
+  font-weight: 600;
+  padding: 0 4px;
+  border-radius: 3px;
 }
-.article-content table thead {
-  position: sticky;
-  top: 148px;
-  z-index: 5;
+.article-content code.cmp-lower {
+  color: #9a3412 !important;
+  background: #ffedd5 !important;
+  font-weight: 600;
+  padding: 0 4px;
+  border-radius: 3px;
 }
-.article-content table thead th {
-  background: #fafafa;
+.article-content code.cmp-equal {
+  color: #166534 !important;
+  background: #dcfce7 !important;
+  font-weight: 600;
+  padding: 0 4px;
+  border-radius: 3px;
 }
-.dark .article-content table thead th {
-  background: #1a1a1a;
+
+/* === Stage table gain/grade badges === */
+/* Positive (climbing) = red, Negative (descending) = green, 3-tier intensity */
+.article-content code.gain-pos-low {
+  color: #991b1b !important;
+  background: #fee2e2 !important;
+  font-weight: 600;
+  padding: 0 4px;
+  border-radius: 3px;
 }
+.article-content code.gain-pos-med {
+  color: #7f1d1d !important;
+  background: #fca5a5 !important;
+  font-weight: 600;
+  padding: 0 4px;
+  border-radius: 3px;
+}
+.article-content code.gain-pos-high {
+  color: #450a0a !important;
+  background: #f87171 !important;
+  font-weight: 600;
+  padding: 0 4px;
+  border-radius: 3px;
+}
+.article-content code.gain-neg-low {
+  color: #166534 !important;
+  background: #dcfce7 !important;
+  font-weight: 600;
+  padding: 0 4px;
+  border-radius: 3px;
+}
+.article-content code.gain-neg-med {
+  color: #14532d !important;
+  background: #86efac !important;
+  font-weight: 600;
+  padding: 0 4px;
+  border-radius: 3px;
+}
+.article-content code.gain-neg-high {
+  color: #052e16 !important;
+  background: #4ade80 !important;
+  font-weight: 600;
+  padding: 0 4px;
+  border-radius: 3px;
+}
+
 

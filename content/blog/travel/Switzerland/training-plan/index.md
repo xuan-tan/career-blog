@@ -50,17 +50,16 @@ Your 250W bursts on Singapore climbs = Z5+ surges. Susten is the opposite — no
 
 #### Training Availability
 
-| When | Session | Day | Time |
-| :--- | :--- | :--- | :--- |
-| Weekdays | AM | Tue, Wed, Thu | 5:30–9:00 |
-| Weekdays | PM | Mon, Wed, Thu | 5:30–7:30 |
-| **Rest** | — | **Mon, Fri** | Full rest preferred |
+| When     | Session | Day           | Time                |
+| :------- | :------ | :------------ | :------------------ |
+| Weekdays | AM      | Tue, Wed, Thu | 5:30–9:00           |
+| Weekdays | PM      | Mon, Wed, Thu | 5:30–7:30           |
+| **Rest** | —       | **Mon, Fri**  | Full rest preferred |
 
 #### Training Timeline
 
 {{< mermaid >}}
 gantt
-    title Training Timeline
     dateFormat  YYYY-MM-DD
     axisFormat  W%W
 
@@ -87,16 +86,19 @@ gantt
 
 ### Phase 1: Accelerated Power Build
 
-**Weeks 1–3 (May 11–31) — Focus: Torque capacity & muscular endurance**
+| Week     | Date        | Focus                                |
+| :------- | :---------- | :----------------------------------- |
+| 1 -3     | May 11 - 31 | Torque capacity & muscular endurance |
 
 Build the raw strength to turn a low cadence under load. Singapore is flat — so every hard session is done at <70 RPM to simulate the torque of alpine grades.
 
-| Session | Frequency | What |
-| :--- | :--- | :--- |
-| **Climbing Intervals** (AM) | Tue + Thu | Low cadence blocks on trainer. Week 1: 4×10 min → Week 2: 4×12 min → Week 3: 5×12 min. All at **Z3**, <70 RPM, 2 min Z1 recovery. Main set minimum 45 min. |
-| **Hill Repeats** (AM) | Sat | Find the steepest continuous bit available (BCM, Mandai). 5–8 × 2–3 min max effort, low cadence. Or trainer: 10 × 2 min @ **Z4**, 60 RPM |
-| **Endurance** (AM/PM) | Wed, maybe Sun | 60–90 min **Z2**, normal cadence. Flush legs, keep CTL from dropping |
-| **Z2 Spin** (AM) | Wed | Recovery between hard days. 45–60 min **Z1–Z2** |
+| Session                     | Frequency      | What                                                                                                                                                             |
+| :-------------------------- | :------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Climbing Intervals** (AM) | Tue + Thu      | Low cadence blocks on trainer.<br>Week 1: 4×10 min → Week 2: 4×12 min → Week 3: 5×12 min.<br>All at **Z3**, <70 RPM, 2 min Z1 recovery. Main set minimum 45 min. |
+| **Hill Repeats** (AM)       | Sat            | Find the steepest continuous bit available (BCM, Mandai)<br>5–8 × 2–3 min max effort, low cadence<br>Or trainer: 10 × 2 min @ **Z4**, 60 RPM                     |
+| **Endurance** (AM/PM)       | Wed, maybe Sun | 60–90 min **Z2**, normal cadence.<br>Flush legs, keep CTL from dropping.                                                                                         |
+| **Z2 Spin** (AM)            | Wed            | Recovery between hard days.<br>45–60 min **Z1–Z2**                                                                                                               |
+|                             |                |                                                                                                                                                                  |
 
 **Success signal:** Able to sustain **20+ min at <70 RPM at Z3** without form breaking down.
 
@@ -118,15 +120,15 @@ Build the raw strength to turn a low cadence under load. Singapore is flat — s
 
 ##### Week 1 (May 11–17)
 
-| Date | Session | .icu Syntax |
-| :--- | :--- | :--- |
-| Mon 11 | Rest | — |
-| Tue 12 AM | Climbing Intervals 4×10 min (trainer) | `Warmup 10m Z1 85rpm`<br>`4x`<br><br>`10m Z3 60-70rpm`<br>`Recovery 2m Z1 85rpm`<br><br>`Cooldown 10m Z1 85rpm` |
-| Wed 13 AM | Z2 Spin (trainer) | `Warmup 10m Z1`<br>`45m Z2 85rpm` |
-| Thu 14 AM | Climbing Intervals 4×10 min | Same as Tue |
-| Fri 15 | Rest | — |
-| Sat 16 AM | Hill Repeats — Rifle Range / Mt Faber / Lor Sesuai | Freeride to hill<br>`5x laps (climb hard + descend easy)` |
-| Sun 17 AM | Long Z2 | `1h30m Z2 85-90rpm` |
+| Date      | Session                                            | .icu Syntax                                                                                                     |
+| :-------- | :------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------- |
+| Mon 11    | Rest                                               | —                                                                                                               |
+| Tue 12 AM | Climbing Intervals 4×10 min (trainer)              | `Warmup 10m Z1 85rpm`<br>`4x`<br><br>`10m Z3 60-70rpm`<br>`Recovery 2m Z1 85rpm`<br><br>`Cooldown 10m Z1 85rpm` |
+| Wed 13 AM | Z2 Spin (trainer)                                  | `Warmup 10m Z1`<br>`45m Z2 85rpm`                                                                               |
+| Thu 14 AM | Climbing Intervals 4×10 min                        | Same as Tue                                                                                                     |
+| Fri 15    | Rest                                               | —                                                                                                               |
+| Sat 16 AM | Hill Repeats — Rifle Range / Mt Faber / Lor Sesuai | Freeride to hill<br>`5x laps (climb hard + descend easy)`                                                       |
+| Sun 17 AM | Long Z2                                            | `1h30m Z2 85-90rpm`                                                                                             |
 
 ##### Week 2 (May 18–24)
 
@@ -186,12 +188,12 @@ This is the meat of the plan. Intervals get longer and more route-specific. Sust
 
 #### Back-to-Back Weekend Progression
 
-| Week | Sat (Hard) | Sun (Fatigued) |
-| :--- | :--- | :--- |
-| **Jun 8 (Wk 5)** | 2.5h with 3×15 min @ **Z3** | 2h Z2 |
-| **Jun 15 (Wk 6)** | 3h with 2×20 min @ **Z3-Z4 border** | 2.5h with 2×20 min @ **Z3 low end** |
-| **Jun 22 (Wk 7: De-load)** | 1.5h Z2 easy | 1.5h Z2 — full recovery |
-| **Jun 29 (Wk 8)** | 3h with 1×45 min @ **Z3** OR 2×30 min @ **Z3-Z4 border** | 3h with 1×30 min @ **Z3** (fatigued) |
+| Week                       | Sat (Hard)                                               | Sun (Fatigued)                       |
+| :------------------------- | :------------------------------------------------------- | :----------------------------------- |
+| **Jun 8 (Wk 5)**           | 2.5h with 3×15 min @ **Z3**                              | 2h Z2                                |
+| **Jun 15 (Wk 6)**          | 3h with 2×20 min @ **Z3-Z4 border**                      | 2.5h with 2×20 min @ **Z3 low end**  |
+| **Jun 22 (Wk 7: De-load)** | 1.5h Z2 easy                                             | 1.5h Z2 — full recovery              |
+| **Jun 29 (Wk 8)**          | 3h with 1×45 min @ **Z3** OR 2×30 min @ **Z3-Z4 border** | 3h with 1×30 min @ **Z3** (fatigued) |
 
 **Success signal:** By Week 8, the Sunday ride should feel **hard but manageable** — not a struggle. HRV recovers overnight.
 
@@ -215,7 +217,7 @@ This is the meat of the plan. Intervals get longer and more route-specific. Sust
 
 ---
 
-### Other Notes
+### Notes on Riding Craft
 
 #### Descending (Day 3)
 
@@ -225,12 +227,6 @@ Day 3 drops **30 km / 1,600 m** from Sustenpass to Meiringen.
 - Body position: outside pedal down, outside hand on drops, inside knee into the turn.
 - Brake before the corner, not in it.
 - **Smooth is fast.**
-
-#### Gear
-
-- 50/34 + 11-34 cassette → **34×34 is your alpine gear.**
-- On Grimsel you'll spend most of the climb in 34×28–34.
-- Drivetrain clean and well-lubed before departure.
 
 #### Route-Specific Milestones
 

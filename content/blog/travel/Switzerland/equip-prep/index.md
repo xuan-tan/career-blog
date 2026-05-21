@@ -11,14 +11,14 @@ category: ["Travel"]
 
 ## Drivetrain & Components
 
-| Item | What to check | Spec | Done |
-|---|---|---|---|
-| Chain | Clean & lube | Fresh wax or drip lube before departure | [ ] |
-| Chain | Chain wear | .75x tool | [ ] |
-| Cassette & chainring | Wear | Replace if shark-toothed or skipping | [ ] |
-| Brakes | Check fluid levels | topped up, no spongy feel, no leaks at coupler | [ ] |
-| Brake pads | Thickness | Replace if <50% remaining | [ ] |
-| Di2 | Charge | Full charge before packing | [ ] |
+| Item                 | What to check      | Spec                                           | Done |
+| -------------------- | ------------------ | ---------------------------------------------- | ---- |
+| Chain                | Clean & lube       | Fresh wax or drip lube before departure        | [ ]  |
+| Chain                | Chain wear         | .75x tool                                      | [ ]  |
+| Cassette & chainring | Wear               | Replace if shark-toothed or skipping           | [ ]  |
+| Brakes               | Check fluid levels | topped up, no spongy feel, no leaks at coupler | [ ]  |
+| Brake pads           | Thickness          | Replace if <50% remaining                      | [ ]  |
+| Di2                  | Charge             | Full charge before packing                     | [ ]  |
 
 ## Wheels & Tyres
 
@@ -54,14 +54,14 @@ category: ["Travel"]
 
 ## Packing & Travel
 
-| Item | What to check | Spec | Done |
-|---|---|---|---|
-| Frame protection | Pack | Pipe insulation on top tube, fork spacer | [ ] |
-| Derailleur hanger | Protect | Protector or remove RD entirely | [ ] |
-| Handlebar | Loosen & turn | Taped in place | [ ] |
-| Pedals | Pack in carry-on | Lighter + safer from theft | [ ] |
-| Tools | Pack | Multi-tool with chain breaker, tyre levers, pedal wrench, torque wrench | [ ] |
-| Bike box weight | Check | Under airline limit (typically 23-30kg) | [ ] |
+| Item              | What to check    | Spec                                                                    | Done |
+| ----------------- | ---------------- | ----------------------------------------------------------------------- | ---- |
+| Frame protection  | Pack             | Pipe insulation on top tube, fork spacer                                | [ ]  |
+| Derailleur hanger | Protect          | Protector or remove RD entirely                                         | [ ]  |
+| Handlebar         | Loosen & turn    | Taped in place                                                          | [ ]  |
+| Pedals            | Pack in carry-on | Lighter + safer from theft                                              | [ ]  |
+| Tools             | Pack             | Multi-tool with chain breaker, tyre levers, pedal wrench, torque wrench | [ ]  |
+| Bike box weight   | Check            | Under airline limit (typically 23-30kg)                                 | [ ]  |
 
 ## Final Shakedown (Week Before)
 
