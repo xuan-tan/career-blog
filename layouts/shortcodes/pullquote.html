@@ -1,0 +1,10 @@
+{{- $quote := .Get "quote" | default (.Inner | markdownify) -}}
+{{- $author := .Get "author" | default "" -}}
+{{- $align := .Get "align" | default "center" -}}
+
+<blockquote class="editorial-pullquote editorial-pullquote--{{ $align }}">
+  <p>{{ $quote | markdownify }}</p>
+  {{- with $author -}}
+    <cite>— {{ . }}</cite>
+  {{- end -}}
+</blockquote>

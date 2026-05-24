@@ -1,0 +1,25 @@
+{{- $src := .Get "src" | default "" -}}
+{{- $alt := .Get "alt" | default "" -}}
+{{- $width := .Get "width" | default "100%" -}}
+{{- $height := .Get "height" | default "auto" -}}
+{{- $imgUrl := "" -}}
+
+{{- $imgRes := .Page.Resources.GetMatch $src -}}
+{{- if $imgRes -}}
+  {{- $fit := $imgRes.Fit "960x1200" -}}
+  {{- $imgUrl = $fit.RelPermalink -}}
+{{- else -}}
+  {{- $globalRes := resources.GetMatch (printf "**/%s" $src) -}}
+  {{- if $globalRes -}}
+    {{- $fit := $globalRes.Fit "960x1200" -}}
+    {{- $imgUrl = $fit.RelPermalink -}}
+  {{- else -}}
+    {{- $pageBase := $.Page.RelPermalink -}}
+    {{- $imgUrl = printf "%s%s" $pageBase $src -}}
+  {{- end -}}
+{{- end -}}
+
+<span class="editorial-grid-item">
+  <img src="{{ $imgUrl }}" alt="{{ $alt }}" loading="lazy"
+       style="width: {{ $width }}; height: {{ $height }}; object-fit: cover;">
+</span>

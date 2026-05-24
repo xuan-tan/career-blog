@@ -1,0 +1,11 @@
+{{- $cols := .Get "cols" | default "2" -}}
+{{- $caption := .Get "caption" | default "" -}}
+
+<figure class="editorial-grid editorial-grid--{{ $cols }}">
+  <div class="editorial-grid-inner">
+    {{ .Inner }}
+  </div>
+  {{- with $caption -}}
+    <figcaption>{{ . | markdownify }}</figcaption>
+  {{- end -}}
+</figure>

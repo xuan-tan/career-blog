@@ -1,0 +1,26 @@
+{{- $src := .Get "src" | default "" -}}
+{{- $alt := .Get "alt" | default "" -}}
+{{- $caption := .Get "caption" | default "" -}}
+{{- $align := .Get "align" | default "wide" -}}
+{{- $ratio := .Get "ratio" | default "" -}}
+{{- $imgUrl := "" -}}
+
+{{- $imgRes := .Page.Resources.GetMatch $src -}}
+{{- if $imgRes -}}
+  {{- $imgUrl = ($imgRes.Fit "1920x1440").RelPermalink -}}
+{{- else -}}
+  {{- $globalRes := resources.GetMatch (printf "**/%s" $src) -}}
+  {{- if $globalRes -}}
+    {{- $imgUrl = ($globalRes.Fit "1920x1440").RelPermalink -}}
+  {{- else -}}
+    {{- $pageBase := $.Page.RelPermalink -}}
+    {{- $imgUrl = printf "%s%s" $pageBase $src -}}
+  {{- end -}}
+{{- end -}}
+
+<figure class="editorial-image editorial-image--{{ $align }} {{ with $ratio }}editorial-image--{{ . }}{{ end }}">
+  <img src="{{ $imgUrl }}" alt="{{ $alt }}" loading="lazy">
+  {{- with $caption -}}
+    <figcaption>{{ . | markdownify }}</figcaption>
+  {{- end -}}
+</figure>

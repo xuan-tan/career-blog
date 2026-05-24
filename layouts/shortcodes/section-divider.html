@@ -1,0 +1,4 @@
+{{- $size := .Get "size" | default "m" -}}
+{{- $label := .Get "label" | default "" -}}
+
+<hr class="editorial-divider editorial-divider--{{ $size }}" {{ with $label }}data-label="{{ . }}"{{ end }}>

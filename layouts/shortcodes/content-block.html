@@ -1,0 +1,7 @@
+{{- $side := .Get "side" | default "center" -}}
+{{- $width := .Get "width" | default "narrow" -}}
+{{- $class := .Get "class" | default "" -}}
+
+<div class="editorial-content editorial-content--{{ $side }} editorial-content--{{ $width }} {{ $class }}">
+  {{ .Inner | markdownify }}
+</div>

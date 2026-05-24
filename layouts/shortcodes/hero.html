@@ -1,0 +1,35 @@
+{{- $src := .Get "src" | default "" -}}
+{{- $alt := .Get "alt" | default "" -}}
+{{- $overlay := .Get "overlay" | default "" -}}
+{{- $height := .Get "height" | default "70" -}}
+{{- $img := "" -}}
+{{- $imgUrl := "" -}}
+
+{{- /* Try page bundle resource first */ -}}
+{{- $imgRes := .Page.Resources.GetMatch $src -}}
+{{- if $imgRes -}}
+  {{- $imgUrl = $imgRes.RelPermalink -}}
+{{- else -}}
+  {{- /* Try global assets */ -}}
+  {{- $globalRes := resources.GetMatch (printf "**/%s" $src) -}}
+  {{- if $globalRes -}}
+    {{- $imgUrl = $globalRes.RelPermalink -}}
+  {{- else -}}
+    {{- /* Fallback: build relative URL from page path */ -}}
+    {{- $pageBase := $.Page.RelPermalink -}}
+    {{- $imgUrl = printf "%s%s" $pageBase $src -}}
+  {{- end -}}
+{{- end -}}
+
+<div class="editorial-hero" style="--hero-height: {{ $height }}vh;">
+  <div class="editorial-hero-image">
+    <img src="{{ $imgUrl }}" alt="{{ $alt }}" loading="lazy">
+  </div>
+  {{- with $overlay -}}
+    <div class="editorial-hero-overlay">
+      <div class="editorial-hero-content">
+        {{ . | markdownify }}
+      </div>
+    </div>
+  {{- end -}}
+</div>
