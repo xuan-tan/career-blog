@@ -135,7 +135,7 @@ category:
     var d = PTS.map(function (p, k) { return (k ? 'L' : 'M') + p[0] + ' ' + p[1]; }).join(' ');
     var route = document.createElementNS(ns, 'path');
     route.setAttribute('d', d); route.setAttribute('class', 'srd-route');
-    route.setAttribute('pathLength', '1');
+    route.setAttribute('id', 'srdRoute');
     svg.appendChild(route);
     function marker(x, y, kind) {
       var c = document.createElementNS(ns, 'circle');
@@ -170,7 +170,7 @@ category:
 
   // ---- state ----
   var wrap, routePath, hud, gallery, stage, dots, lbl, lb, lbImg, lbCap;
-  var totalLen = 0, gateIdx = 0, lastWp = -1;
+  var totalLen = 0, gateIdx = 0, lastWp = -1, ROUTE_LEN = 0;
 
   function indexAtGate(imgs, local) {
     return Math.min(imgs.length - 1, Math.max(0, Math.floor(local * imgs.length)));
@@ -216,7 +216,7 @@ category:
   function render() {
     var g = GATES[gateIdx];
     var p = g.type === 'draw' ? (g.f0 + (g.f1 - g.f0) * (g.local || 0)) : g.f;
-    routePath.style.strokeDashoffset = String(1 - p);
+    routePath.style.strokeDashoffset = String(ROUTE_LEN * (1 - p));
     // markers
     var reached = 0;
     for (var k = 0; k < WAYPOINTS.length; k++) if (WP_FRAC[k + 1] <= p + 0.001) reached++;
@@ -283,7 +283,10 @@ category:
   // ---- boot ----
   buildSvg();
   wrap = document.getElementById('srdWrap');
-  routePath = document.querySelector('#srdRoute');
+  routePath = document.getElementById('srdRoute');
+  ROUTE_LEN = routePath.getTotalLength();
+  routePath.style.strokeDasharray = ROUTE_LEN + ' ' + ROUTE_LEN;
+  routePath.style.strokeDashoffset = String(ROUTE_LEN); // start 0% drawn
   hud = document.getElementById('srdHud');
   gallery = document.getElementById('srdGallery');
   stage = document.getElementById('srdStage');
