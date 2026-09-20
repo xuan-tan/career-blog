@@ -567,8 +567,11 @@ hr {
        baseline instead of their box tops, which read as misaligned. */
     align-items: baseline;
   }
-  .ed-feature__title {
+  .ed-feature__heading {
     grid-column: 1 / span 6;
+  }
+  .ed-feature__title {
+    grid-column: auto;
   }
   .ed-feature__standfirst {
     grid-column: 8 / -1;
@@ -634,7 +637,31 @@ hr {
   letter-spacing: var(--track-display);
   font-weight: var(--weight-heading);
   color: var(--ink-0);
+  margin: 0;
+}
+
+/* Title row: title plus reading time, baseline-aligned on one line. The
+   reading time belongs to the piece, so it rides with the title rather than
+   sitting in the metadata bar with the filterable stuff. */
+.ed-card__heading,
+.ed-feature__heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5em;
+}
+.ed-card__heading {
   margin: 0.4rem 0 0.5rem;
+}
+.ed-card__readtime,
+.ed-feature__readtime {
+  font-family: var(--font-meta);
+  font-size: var(--type-micro);
+  font-weight: 400;
+  letter-spacing: var(--track-meta);
+  text-transform: uppercase;
+  color: var(--ink-3);
+  white-space: nowrap;
 }
 .ed-card__title a {
   text-decoration: none;

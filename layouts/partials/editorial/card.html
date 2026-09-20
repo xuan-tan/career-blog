@@ -6,13 +6,14 @@
 
      Structure:
        image
-       title
+       title  (+ reading time, inline after it)
        standfirst / summary
        metadata bar                 <- tags · descriptor, between two hairlines
 
-     The metadata bar is the ONLY metadata band on the card: tags and the
-     descriptor both live there, sandwiched between hairlines, so they read as
-     catalogue metadata rather than competing with the title.
+     Reading time sits inline after the title because it belongs to the piece,
+     not to the catalogue metadata. The bar keeps only things you might filter
+     by: tags (links) and the descriptor (entry count for a section, date for
+     a post).
 
      Why nothing sits above the title: an earlier version kept the descriptor
      as a kicker above the title, but only some cards have one (a section with
@@ -40,8 +41,10 @@
      permalink config rather than a hand-built URL). */}}
 {{- $terms := $page.GetTerms "tags" -}}
 
-{{/* Descriptor: entry count for sections, date + reading time for posts. */}}
+{{/* Bar descriptor: entry count for a section, date for a post. A post's
+     reading time is NOT in here - it goes inline after the title. */}}
 {{- $info := slice -}}
+{{- $readTime := "" -}}
 {{- if $page.IsSection -}}
   {{- with len $page.RegularPagesRecursive -}}
     {{- $info = $info | append (printf "%d %s" . (cond (eq . 1) "entry" "entries")) -}}
@@ -50,7 +53,7 @@
   {{- if not $page.Date.IsZero -}}
     {{- $info = $info | append ($page.Date.Format "2 Jan 2006") -}}
   {{- end -}}
-  {{- $info = $info | append (printf "%d min read" $page.ReadingTime) -}}
+  {{- $readTime = printf "%d min read" $page.ReadingTime -}}
 {{- end -}}
 {{- $infoStr := delimit $info " · " -}}
 
@@ -72,7 +75,10 @@
   </a>
   {{- end }}
   <div class="ed-feature__body">
-    <h2 class="ed-feature__title"><a href="{{ $href }}">{{ $page.Title | emojify }}</a></h2>
+    <div class="ed-feature__heading">
+      <h2 class="ed-feature__title"><a href="{{ $href }}">{{ $page.Title | emojify }}</a></h2>
+      {{- with $readTime }}<span class="ed-feature__readtime">{{ . }}</span>{{ end }}
+    </div>
     {{ with $summary }}<p class="ed-standfirst ed-feature__standfirst">{{ . | plainify | truncate 220 }}</p>{{ end }}
     {{- if $hasBar }}
     <footer class="ed-feature__tags">
@@ -93,7 +99,10 @@
     <img class="nozoom" src="{{ . }}" alt="" loading="lazy" decoding="async">
   </a>
   {{- end }}
-  <h3 class="ed-card__title"><a href="{{ $href }}">{{ $page.Title | emojify }}</a></h3>
+  <div class="ed-card__heading">
+    <h3 class="ed-card__title"><a href="{{ $href }}">{{ $page.Title | emojify }}</a></h3>
+    {{- with $readTime }}<span class="ed-card__readtime">{{ . }}</span>{{ end }}
+  </div>
   {{ with $summary }}<p class="ed-card__summary">{{ . | plainify | truncate 140 }}</p>{{ end }}
   {{- if $hasBar }}
   <footer class="ed-card__tags">
