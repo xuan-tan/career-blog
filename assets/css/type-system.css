@@ -567,9 +567,6 @@ hr {
        baseline instead of their box tops, which read as misaligned. */
     align-items: baseline;
   }
-  .ed-feature__body > .ed-meta {
-    grid-column: 1 / -1;
-  }
   .ed-feature__title {
     grid-column: 1 / span 6;
   }
