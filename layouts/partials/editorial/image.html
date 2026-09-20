@@ -1,0 +1,66 @@
+{{/* editorial/image.html — resolve a page's feature image URL.
+     Same lookup order as Blowfish's article-link/card.html so existing
+     images keep working: frontmatter → page resources → site default.
+
+     Params:
+       page  (Page, required)
+       width (int, default 1200) — target width for cropping
+
+     Returns: URL string, or "" when the page has no image.
+*/}}
+{{- $page := .page -}}
+{{- $width := .width | default 1200 -}}
+{{- $disable := site.Store.Get "disableImageOptimization" -}}
+{{- $img := false -}}
+{{- $url := "" -}}
+
+{{- if not $page.Params.hideFeatureImage -}}
+  {{- with $page.Params.featureimage -}}
+    {{- if or (strings.HasPrefix . "http:") (strings.HasPrefix . "https:") -}}
+      {{- if site.Params.hotlinkFeatureImage -}}
+        {{- $url = . -}}
+      {{- else -}}
+        {{- $img = resources.GetRemote . -}}
+      {{- end -}}
+    {{- else -}}
+      {{/* Frontmatter image: try the page bundle first (relative filenames
+         like "featured.jpg"), then fall back to global assets. */}}
+      {{- $img = $page.Resources.GetMatch . -}}
+      {{- if not $img -}}{{- $img = resources.Get . -}}{{- end -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- if not (or $img $url) -}}
+    {{- $images := $page.Resources.ByType "image" -}}
+    {{- range slice "*feature*" "*cover*" "*thumbnail*" -}}
+      {{- if not $img -}}{{- $img = $images.GetMatch . -}}{{- end -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- if not (or $img $url) -}}
+    {{/* Fallback to Blowfish's placeholder (site.Params.defaultFeaturedImage,
+       exposed as site.Store "defaultFeaturedImage" by partials/init.html).
+       Currently assets/img/featured.svg - an animated SVG, not a GIF.
+       This means image-less entries still get a thumbnail so the grid stays
+       visually complete. Set `hideFeatureImage: true` on a page to opt out
+       entirely, which falls through to the text-only note card instead. */}}
+    {{- $default := site.Store.Get "defaultFeaturedImage" -}}
+    {{- if $default.url -}}
+      {{- $url = $default.url -}}
+    {{- else if $default.obj -}}
+      {{- $img = $default.obj -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- if and (not $url) $img -}}
+    {{- if or $disable (eq $img.MediaType.SubType "svg") -}}
+      {{- $url = $img.RelPermalink -}}
+    {{- else if ge $img.Width $width -}}
+      {{- $url = ($img.Fill (printf "%dx%d Center" $width (int (div (mul $width 3) 4)))).RelPermalink -}}
+    {{- else -}}
+      {{- $url = ($img.Fill (printf "%dx%d Center" $img.Width (int (div (mul $img.Width 3) 4)))).RelPermalink -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- return $url -}}

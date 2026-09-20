@@ -1,18 +1,23 @@
 ---
-title: "Bikes"
+title: "Career"
+weight: 5
+draft: true
 description: "A Career."
+build:
+  list: never
+  render: never
 cascade:
   showEdit: false
-  showSummary: true
+  showSummary: false
   invertPagination: true
 layout: editorial-list
 ---
 
 {{< lead >}}
-Two wheels, drivetrains and a whole lot of elbow grease
+A Career and where it might lead
 {{< /lead >}}
 
-I can remember when I started picking up cycling again. It was in the thick of Covid and Singapore had launched its "circuit-breaker" phase.
+This section contains my forays into what a "structured" career is, and how I navigate that.
 
 Explore via [taxonomy listing]({{< ref "tags" >}}) page.
 

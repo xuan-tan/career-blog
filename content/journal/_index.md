@@ -1,0 +1,19 @@
+---
+title: "Journal"
+description: "An attempt to restore order to scattered thoughts."
+cascade:
+  showEdit: false
+  showSummary: false
+  invertPagination: true
+  showReadingTime: false
+  showViews: false
+layout: editorial-list
+aliases:
+  - "/blog/"
+---
+
+{{< lead >}}
+Restoring order to scattered thoughts, writing to encourage intentional living.
+{{< /lead >}}
+
+I want to write more. I find I live life a little more intentionally when I pause to put words to a page. Written content in Longform is also something that is disappearing but one that I enjoy. To write is a gift and I wish to continue contributing to this medium.
