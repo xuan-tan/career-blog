@@ -200,21 +200,40 @@ textarea {
   font-family: var(--font-meta);
 }
 
-/* Site chrome (nav, badges, footer, controls) is Inter — the sans is the
-   contrast axis that makes the serif content read as content. */
+/* ---- UI chrome is always the sans (Inter); content is always serif. ----
+   The sans is the contrast axis that makes serif content read as content.
+   Anything that isn't the article's own words belongs to the system, not
+   the prose: navigation, controls, labels, metadata, pagination, search,
+   table of contents, breadcrumbs.
+
+   Note the descendant selectors (`footer *`, `nav *`). They matter because
+   the base `p { font-family: var(--font-text) }` rule is element-scoped: a
+   `footer`-only selector styles the footer box but NOT the <p> inside it,
+   which then inherited Newsreader. That is how serif leaked into chrome. */
 nav,
-nav a,
-nav span,
+nav *,
+#the-top,
+#the-top *,
 #menu-blur,
-#menu-blur a,
-#menu-blur span,
+#menu-blur *,
+.main-menu,
+.main-menu *,
 footer,
-footer a,
+footer *,
+.page-item,
+.page-link,
+#scroll-to-top,
+#TOCView,
+#TOCView *,
+#search-wrapper,
+#search-modal,
+#search-query,
 .badge,
 button,
 .btn,
 select,
-input {
+input,
+textarea {
   font-family: var(--font-meta);
 }
 
