@@ -200,6 +200,29 @@ textarea {
   font-family: var(--font-meta);
 }
 
+/* ---- Footer: quiet chrome ----
+   The footer is a footnote, not content - it should not compete for
+   attention. One size for everything (--type-meta, same as the nav and the
+   page labels), regular weight, muted ink.
+
+   This has to set font-size explicitly: the chrome rule above only assigns
+   the font family, so the theme's text-base (16px) on the footer nav and
+   text-sm (14px) on the copyright were still winning on size. These
+   unlayered rules supersede those layered utilities.*/
+#site-footer,
+#site-footer * {
+  font-size: var(--type-meta);
+  font-weight: 400;
+  color: var(--ink-3);
+}
+#site-footer a {
+  color: var(--ink-3);
+  text-decoration-color: var(--ink-4);
+}
+#site-footer a:hover {
+  color: var(--accent);
+}
+
 /* ---- UI chrome is always the sans (Inter); content is always serif. ----
    The sans is the contrast axis that makes serif content read as content.
    Anything that isn't the article's own words belongs to the system, not
