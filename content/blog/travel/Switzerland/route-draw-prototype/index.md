@@ -3,6 +3,7 @@ title: "Route Drawing Prototype"
 date: 2026-09-03
 draft: false
 layout: editorial
+featureimage: demo-furka.jpg
 description: "Interactive prototype — scroll to draw a route across a pinned map, with photo waypoints that pause the drawing. Demo images from the Swiss Alps posts; GPX + full media pending."
 tags:
   - prototype

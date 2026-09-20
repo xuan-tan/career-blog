@@ -3,6 +3,12 @@
      Params:
        page    (Page, required)
        variant ("card" | "feature", default "card")
+
+     Note: grid/feature images are wrapped in a navigation link, so they
+     are marked `nozoom`. Blowfish binds medium-zoom to `img:not(.nozoom)`
+     (see layouts/partials/footer.html) — without this the click both
+     navigated AND opened the lightbox, which pushed a history entry and
+     made "back" reopen the spotlight instead of the list.
 */}}
 {{- $page := .page -}}
 {{- $variant := .variant | default "card" -}}
@@ -40,10 +46,10 @@
 {{- end -}}
 
 {{- if $isFeature -}}
-<article class="ed-feature">
+<article class="ed-feature{{ if not $img }} ed-feature--note{{ end }}">
   {{- with $img }}
   <a class="ed-feature__media" href="{{ $href }}" tabindex="-1" aria-hidden="true">
-    <img src="{{ . }}" alt="" loading="eager" decoding="async">
+    <img class="nozoom" src="{{ . }}" alt="" loading="eager" decoding="async">
   </a>
   {{- end }}
   <div class="ed-feature__body">
@@ -53,10 +59,10 @@
   </div>
 </article>
 {{- else -}}
-<article class="ed-card">
+<article class="ed-card{{ if not $img }} ed-card--note{{ end }}">
   {{- with $img }}
   <a class="ed-card__media" href="{{ $href }}" tabindex="-1" aria-hidden="true">
-    <img src="{{ . }}" alt="" loading="lazy" decoding="async">
+    <img class="nozoom" src="{{ . }}" alt="" loading="lazy" decoding="async">
   </a>
   {{- end }}
   {{ with $metaStr }}<p class="ed-eyebrow">{{ . }}</p>{{ end }}

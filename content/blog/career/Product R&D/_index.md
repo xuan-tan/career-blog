@@ -8,6 +8,7 @@ category: ["Career"]
 build:
   list: never
   render: never
+layout: editorial-list
 ---
 
 Charting career path in product

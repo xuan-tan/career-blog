@@ -1,5 +1,5 @@
 ---
-title: "Blog"
+title: "Journal"
 description: "An attempt to restore order to scattered thoughts."
 cascade:
   showEdit: false
@@ -7,6 +7,7 @@ cascade:
   invertPagination: true
   showReadingTime: false
   showViews: false
+layout: editorial-list
 ---
 
 {{< lead >}}

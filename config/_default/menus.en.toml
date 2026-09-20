@@ -11,19 +11,19 @@
 # ordered by weight from lowest to highest.
 
 [[main]]
-  name = "Blog"
+  name = "Journal"
   pageRef = "blog"
   weight = 2
 
 #[[main]]
 #  name = "Career"
-#  parent = "Blog"
+#  parent = "Journal"
 #  pageRef = "blog/career"
 #  weight = 10
 
 [[main]]
   name = "Travel"
-  parent = "Blog"
+  parent = "Journal"
   pageRef = "blog/travel"
   weight = 5
 

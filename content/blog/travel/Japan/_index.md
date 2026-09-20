@@ -1,7 +1,7 @@
 ---
 title: "Japan"
 weight: 5
-layout: "list"
+layout: editorial-list
 description: "Shimanami Kaido by bike, the old roads of Shikoku, and a slow week around Biwa-ko."
 category: ["Travel"]
 tags: ["JP"]

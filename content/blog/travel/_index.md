@@ -14,4 +14,4 @@ cascade:
 A compendium of travel logs.
 {{< /lead >}}
 
-Three passes in the Alps, an island crossing in Japan, a slow loop through northern Vietnam. The routes, the gear, and the things that went sideways.
+The many places that I count myself fortunate to have been able to enjoy with my own senses.

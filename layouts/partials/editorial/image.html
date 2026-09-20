@@ -23,7 +23,10 @@
         {{- $img = resources.GetRemote . -}}
       {{- end -}}
     {{- else -}}
-      {{- $img = resources.Get . -}}
+      {{/* Frontmatter image: try the page bundle first (relative filenames
+         like "featured.jpg"), then fall back to global assets. */}}
+      {{- $img = $page.Resources.GetMatch . -}}
+      {{- if not $img -}}{{- $img = resources.Get . -}}{{- end -}}
     {{- end -}}
   {{- end -}}
 
@@ -34,14 +37,10 @@
     {{- end -}}
   {{- end -}}
 
-  {{- if not (or $img $url) -}}
-    {{- $default := site.Store.Get "defaultFeaturedImage" -}}
-    {{- if $default.url -}}
-      {{- $url = $default.url -}}
-    {{- else if $default.obj -}}
-      {{- $img = $default.obj -}}
-    {{- end -}}
-  {{- end -}}
+  {{/* Deliberately NO fallback to site.Store "defaultFeaturedImage":
+     that made every image-less entry render the same placeholder, so six
+     different posts looked identical. Instead, entries with no real image
+     fall through to the text-only note card (.ed-card--note). */}}
 
   {{- if and (not $url) $img -}}
     {{- if or $disable (eq $img.MediaType.SubType "svg") -}}

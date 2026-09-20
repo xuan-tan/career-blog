@@ -7,6 +7,7 @@ cascade:
   showEdit: false
   showSummary: true
   invertPagination: true
+layout: editorial-list
 ---
 
 {{< lead >}}

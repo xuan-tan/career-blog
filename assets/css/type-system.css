@@ -150,6 +150,27 @@ h6 {
   letter-spacing: 0;
 }
 
+/* Pin Fraunces' SOFT/WONK axes to 0. Measured effect: WONK 1 vs 0 differs
+   by ~16k px at opsz 144 on "Jj&gyaf" — it moves terminals and the
+   ampersand, but NOT the J. Verified: the J glyph is pixel-identical at
+   WONK 0/1, and no ss01-03 / salt / cv01-03 alternate exists. Fraunces'
+   descending squiggle on the J is intrinsic to the roman and can only be
+   changed by changing typeface. See .design-system.md §1. */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.ed-list__title,
+.ed-feature__title,
+.ed-card__title,
+.ed-hero__title,
+.editorial-hero-content > p > strong,
+.editorial-hero-content > p > b {
+  font-variation-settings: "SOFT" 0, "WONK" 0;
+}
+
 p {
   font-family: var(--font-text);
   font-size: var(--type-body);
@@ -455,6 +476,20 @@ hr {
   aspect-ratio: 4 / 3;
   background: var(--surface-1);
   margin-bottom: 1rem;
+}
+
+/* Text-only entries — a section still in progress, or a post with no
+   photography. Treated as notebook items rather than as broken cards:
+   a hairline where the image would be, and a tighter title. */
+.ed-card--note {
+  border-top: 1px solid var(--ink-4);
+  padding-top: 1.25rem;
+}
+.ed-card--note .ed-card__title {
+  font-size: var(--type-h3);
+}
+.ed-feature--note .ed-feature__title {
+  font-size: var(--type-display-m);
 }
 .ed-card__media img {
   width: 100%;
