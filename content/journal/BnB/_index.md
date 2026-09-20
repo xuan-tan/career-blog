@@ -8,8 +8,6 @@ cascade:
   showSummary: true
   invertPagination: true
 layout: editorial-list
-aliases:
-  - "/blog/bnb/"
 ---
 
 {{< lead >}}
