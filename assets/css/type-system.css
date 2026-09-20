@@ -10,7 +10,7 @@
 /* ---------- A. TOKENS ---------- */
 :root {
   /* Typefaces — three roles. See .design-system.md §1 */
-  --font-display: "Fraunces", "Newsreader", Georgia, "Times New Roman", serif;
+  --font-display: "EB Garamond", "Newsreader", Georgia, "Times New Roman", serif;
   --font-text: "Newsreader", Georgia, "Times New Roman", serif;
   --font-meta: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
@@ -150,12 +150,11 @@ h6 {
   letter-spacing: 0;
 }
 
-/* Pin Fraunces' SOFT/WONK axes to 0. Measured effect: WONK 1 vs 0 differs
-   by ~16k px at opsz 144 on "Jj&gyaf" — it moves terminals and the
-   ampersand, but NOT the J. Verified: the J glyph is pixel-identical at
-   WONK 0/1, and no ss01-03 / salt / cv01-03 alternate exists. Fraunces'
-   descending squiggle on the J is intrinsic to the roman and can only be
-   changed by changing typeface. See .design-system.md §1. */
+/* Display type is EB Garamond (was Fraunces — swapped because Fraunces
+   draws an intrinsic descending squiggle on the J that no axis or
+   alternate can remove; see .design-system.md §1). EB Garamond has no
+   SOFT/WONK axes, so no variation pinning is needed. font-weight drives
+   wght across its 400-800 range. */
 h1,
 h2,
 h3,
@@ -168,7 +167,7 @@ h6,
 .ed-hero__title,
 .editorial-hero-content > p > strong,
 .editorial-hero-content > p > b {
-  font-variation-settings: "SOFT" 0, "WONK" 0;
+  font-optical-sizing: auto;
 }
 
 p {
@@ -372,7 +371,7 @@ hr {
   margin-bottom: 3.5rem;
 }
 .ed-list__title {
-  font-size: var(--type-display-m);
+  font-size: var(--type-display-l);
   line-height: var(--leading-display);
   letter-spacing: var(--track-display);
   font-weight: var(--weight-display);
@@ -386,7 +385,7 @@ hr {
 .ed-feature {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
-  row-gap: 1.75rem;
+  row-gap: 2.25rem;
   padding-bottom: var(--space-section);
   border-bottom: 1px solid var(--ink-4);
   margin-bottom: var(--space-section);
@@ -414,7 +413,7 @@ hr {
 .ed-feature__title {
   grid-column: 1;
   font-family: var(--font-display);
-  font-size: var(--type-display-l);
+  font-size: var(--type-display-m);
   line-height: var(--leading-display);
   letter-spacing: var(--track-display);
   font-weight: var(--weight-display);
@@ -441,7 +440,9 @@ hr {
   .ed-feature__body {
     grid-template-columns: repeat(12, minmax(0, 1fr));
     column-gap: 2rem;
-    align-items: start;
+    /* Baseline alignment locks the title and standfirst to a shared first
+       baseline instead of their box tops, which read as misaligned. */
+    align-items: baseline;
   }
   .ed-feature__body > .ed-eyebrow {
     grid-column: 1 / -1;
@@ -451,7 +452,6 @@ hr {
   }
   .ed-feature__standfirst {
     grid-column: 8 / -1;
-    margin-top: 0.4rem;
   }
 }
 
@@ -488,8 +488,10 @@ hr {
 .ed-card--note .ed-card__title {
   font-size: var(--type-h3);
 }
+/* A text-only feature has no banner to carry it, so it takes the larger
+   display size instead. */
 .ed-feature--note .ed-feature__title {
-  font-size: var(--type-display-m);
+  font-size: var(--type-display-l);
 }
 .ed-card__media img {
   width: 100%;
