@@ -4,15 +4,29 @@
        page    (Page, required)
        variant ("card" | "feature", default "card")
 
+     Structure:
+       image
+       title
+       standfirst / summary
+       metadata bar                 <- tags · descriptor, between two hairlines
+
+     The metadata bar is the ONLY metadata band on the card: tags and the
+     descriptor both live there, sandwiched between hairlines, so they read as
+     catalogue metadata rather than competing with the title.
+
+     Why nothing sits above the title: an earlier version kept the descriptor
+     as a kicker above the title, but only some cards have one (a section with
+     no entries has no count), which staggered the titles by ~21px across a
+     row. One band, always at the foot, keeps every card structurally
+     identical and the titles aligned.
+
      Notes:
      - Grid/feature images are wrapped in a navigation link, so they carry
        `nozoom`. Blowfish binds medium-zoom to `img:not(.nozoom)` (see
        layouts/partials/footer.html) — without it the click both navigated
        AND opened the lightbox, which pushed a history entry and made "back"
        reopen the spotlight instead of the list.
-     - The meta line is built from discrete elements, not a joined string, so
-       tags can be real links to /tags/<term>/ and can rank below the
-       descriptor. Spec: .design-system.md §7
+     - Spec: .design-system.md §7
 */}}
 {{- $page := .page -}}
 {{- $variant := .variant | default "card" -}}
@@ -48,10 +62,7 @@
   {{- $summary = $page.Summary | plainify | strings.TrimSpace -}}
 {{- end -}}
 
-{{- $meta := "" -}}
-{{- if or $terms $infoStr -}}
-  {{- $meta = "yes" -}}
-{{- end -}}
+{{- $hasBar := or $terms $infoStr -}}
 
 {{- if $isFeature -}}
 <article class="ed-feature{{ if not $img }} ed-feature--note{{ end }}">
@@ -61,22 +72,18 @@
   </a>
   {{- end }}
   <div class="ed-feature__body">
-    {{- if $meta }}
-    <p class="ed-meta">
-      {{- with $terms }}
-        <span class="ed-meta__tags">
-          {{- range $i, $t := . }}
-            {{- if $i }}<span class="ed-meta__sep" aria-hidden="true">·</span>{{ end }}
-            <a class="ed-meta__tag" href="{{ $t.RelPermalink }}">{{ $t.LinkTitle }}</a>
-          {{- end }}
-        </span>
+    <h2 class="ed-feature__title"><a href="{{ $href }}">{{ $page.Title | emojify }}</a></h2>
+    {{ with $summary }}<p class="ed-standfirst ed-feature__standfirst">{{ . | plainify | truncate 220 }}</p>{{ end }}
+    {{- if $hasBar }}
+    <footer class="ed-feature__tags">
+      {{- range $i, $t := $terms }}
+        {{- if $i }}<span class="ed-meta__sep" aria-hidden="true">·</span>{{ end }}
+        <a class="ed-meta__tag" href="{{ $t.RelPermalink }}">{{ $t.LinkTitle }}</a>
       {{- end }}
       {{- if and $terms $infoStr }}<span class="ed-meta__sep" aria-hidden="true">·</span>{{ end }}
       {{- with $infoStr }}<span class="ed-meta__info">{{ . }}</span>{{ end }}
-    </p>
+    </footer>
     {{- end }}
-    <h2 class="ed-feature__title"><a href="{{ $href }}">{{ $page.Title | emojify }}</a></h2>
-    {{ with $summary }}<p class="ed-standfirst ed-feature__standfirst">{{ . | plainify | truncate 220 }}</p>{{ end }}
   </div>
 </article>
 {{- else -}}
@@ -86,21 +93,17 @@
     <img class="nozoom" src="{{ . }}" alt="" loading="lazy" decoding="async">
   </a>
   {{- end }}
-  {{- if $meta }}
-  <p class="ed-meta">
-    {{- with $terms }}
-      <span class="ed-meta__tags">
-        {{- range $i, $t := . }}
-          {{- if $i }}<span class="ed-meta__sep" aria-hidden="true">·</span>{{ end }}
-          <a class="ed-meta__tag" href="{{ $t.RelPermalink }}">{{ $t.LinkTitle }}</a>
-        {{- end }}
-      </span>
+  <h3 class="ed-card__title"><a href="{{ $href }}">{{ $page.Title | emojify }}</a></h3>
+  {{ with $summary }}<p class="ed-card__summary">{{ . | plainify | truncate 140 }}</p>{{ end }}
+  {{- if $hasBar }}
+  <footer class="ed-card__tags">
+    {{- range $i, $t := $terms }}
+      {{- if $i }}<span class="ed-meta__sep" aria-hidden="true">·</span>{{ end }}
+      <a class="ed-meta__tag" href="{{ $t.RelPermalink }}">{{ $t.LinkTitle }}</a>
     {{- end }}
     {{- if and $terms $infoStr }}<span class="ed-meta__sep" aria-hidden="true">·</span>{{ end }}
     {{- with $infoStr }}<span class="ed-meta__info">{{ . }}</span>{{ end }}
-  </p>
+  </footer>
   {{- end }}
-  <h3 class="ed-card__title"><a href="{{ $href }}">{{ $page.Title | emojify }}</a></h3>
-  {{ with $summary }}<p class="ed-card__summary">{{ . | plainify | truncate 140 }}</p>{{ end }}
 </article>
 {{- end -}}

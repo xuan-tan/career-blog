@@ -576,6 +576,11 @@ hr {
   .ed-feature__standfirst {
     grid-column: 8 / -1;
   }
+  /* The metadata bar runs the full width of the feature body, under both
+     columns. */
+  .ed-feature__tags {
+    grid-column: 1 / -1;
+  }
 }
 
 /* Grid: 1-up → 2-up → asymmetric 12-col.
@@ -650,6 +655,32 @@ hr {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+/* ---- Metadata bar ----
+   The card's only metadata band: tags plus the descriptor, sandwiched
+   between two hairlines at the foot of the card. Block-level, so the
+   borders span the full card width and form a band.
+
+   Tags keep the small/dim treatment from .ed-meta__tag; the descriptor
+   keeps .ed-meta__info (a step larger and brighter), so the two ranks stay
+   distinguishable inside the same bar. */
+.ed-card__tags,
+.ed-feature__tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55em;
+  margin-top: 1.35rem;
+  padding: 0.7rem 0;
+  border-top: 1px solid var(--ink-4);
+  border-bottom: 1px solid var(--ink-4);
+  font-family: var(--font-meta);
+  font-size: var(--type-meta);
+  line-height: var(--leading-meta);
+  letter-spacing: var(--track-meta);
+  text-transform: uppercase;
+  color: var(--ink-2);
 }
 /* Larger cards get a larger title — only where they are actually
    larger (the 6-up slots at the widest breakpoint). */
