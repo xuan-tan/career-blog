@@ -570,9 +570,6 @@ hr {
   .ed-feature__heading {
     grid-column: 1 / span 6;
   }
-  .ed-feature__title {
-    grid-column: auto;
-  }
   .ed-feature__standfirst {
     grid-column: 8 / -1;
   }
@@ -637,24 +634,15 @@ hr {
   letter-spacing: var(--track-display);
   font-weight: var(--weight-heading);
   color: var(--ink-0);
-  margin: 0;
+  margin: 0.4rem 0 0.3rem;
 }
 
-/* Title row: title plus reading time, baseline-aligned on one line. The
-   reading time belongs to the piece, so it rides with the title rather than
-   sitting in the metadata bar with the filterable stuff. */
-.ed-card__heading,
-.ed-feature__heading {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.5em;
-}
-.ed-card__heading {
-  margin: 0.4rem 0 0.5rem;
-}
-.ed-card__readtime,
-.ed-feature__readtime {
+/* Post line: date, then reading time, on its own line under the title.
+   Order on a card is title / date · reading time / summary / metadata bar,
+   so the piece's own facts sit together and the summary reads as the
+   description beneath them. Sections have neither, so it does not render. */
+.ed-card__postmeta,
+.ed-feature__postmeta {
   font-family: var(--font-meta);
   font-size: var(--type-micro);
   font-weight: 400;
@@ -662,6 +650,18 @@ hr {
   text-transform: uppercase;
   color: var(--ink-3);
   white-space: nowrap;
+}
+.ed-card__postmeta {
+  margin: 0 0 0.55rem;
+}
+
+/* The feature keeps its title | standfirst split, so the post line stays
+   inside the title column: the heading wrapper is a block, not a row. */
+.ed-feature__heading {
+  display: block;
+}
+.ed-feature__postmeta {
+  margin: 0.35rem 0 0;
 }
 .ed-card__title a {
   text-decoration: none;
