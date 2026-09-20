@@ -360,24 +360,47 @@ hr {
   align-items: center;
   line-height: 1;
 }
+/* Standfirst / deck. The container is lead-scale, but prose paragraphs
+   *inside* it drop a rank - that difference is the whole point of a deck.
+
+   History: this block previously forced `font-size: inherit` on every
+   nested p and .lead, which flattened the deck and the body copy to the
+   same size. Do not reintroduce that. */
 .ed-standfirst {
   font-family: var(--font-text);
+  font-size: var(--type-lead);
+  line-height: var(--leading-lead);
+  max-width: var(--measure-body);
+  color: var(--ink-2);
+}
+
+/* The deck. The `lead` shortcode renders a <div class="lead ...">, and a
+   section intro may also open with a bare paragraph - both count. */
+.ed-standfirst > .lead,
+.ed-standfirst > p:first-child {
   font-size: var(--type-lead);
   line-height: var(--leading-lead);
   max-width: var(--measure-lead);
   color: var(--ink-2);
 }
-/* Everything nested in a standfirst rides the lead styling, so the
-   `lead` shortcode inside section intros stays consistent. */
-.ed-standfirst p,
-.ed-standfirst .lead {
-  font-size: inherit;
-  line-height: inherit;
-  color: inherit;
-  margin-bottom: 0.75em;
+
+/* Body copy under the deck is one rank down: --type-lead -> --type-body.
+   Also drops from the secondary ink to the body ink. */
+.ed-standfirst p {
+  font-size: var(--type-body);
+  line-height: var(--leading-body);
+  color: var(--ink-1);
 }
+
 .ed-standfirst > :last-child {
   margin-bottom: 0;
+}
+
+/* Breathing room between the page title and the deck. Scoped to the list
+   header so it cannot affect the feature card's standfirst, which relies
+   on baseline alignment with its title. */
+.ed-list__header .ed-standfirst {
+  margin-top: 1.75rem;
 }
 .ed-rule {
   border: none;
