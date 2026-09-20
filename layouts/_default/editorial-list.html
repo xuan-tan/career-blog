@@ -1,0 +1,46 @@
+{{/* Editorial list — feature-led asymmetric grid.
+     Activate with `layout: editorial-list` in a section's _index.md.
+     Spec: .design-system.md §7
+
+     The feature is chosen by `feature: true` on a child page, falling
+     back to the first page by weight. It is then excluded from the grid
+     so it never appears twice.
+*/}}
+{{ define "main" }}
+  {{- $pages := .Pages.ByWeight -}}
+  {{- $featureRel := "" -}}
+  {{- range $pages -}}
+    {{- if and (eq $featureRel "") .Params.feature -}}{{- $featureRel = .RelPermalink -}}{{- end -}}
+  {{- end -}}
+  {{- if eq $featureRel "" -}}
+    {{- with $pages -}}{{- $featureRel = (index . 0).RelPermalink -}}{{- end -}}
+  {{- end -}}
+  {{- $rest := where $pages "RelPermalink" "ne" $featureRel -}}
+  {{- $kicker := .Params.kicker | default "Journal" -}}
+
+  <div class="ed-list">
+    <header class="ed-list__header">
+      <p class="ed-eyebrow">{{ $kicker }}</p>
+      <h1 class="ed-list__title">{{ .Title }}</h1>
+      {{ with .Content }}<div class="ed-standfirst">{{ . }}</div>{{ end }}
+    </header>
+
+    {{- range $pages -}}
+      {{- if eq .RelPermalink $featureRel -}}
+        {{ partial "editorial/card.html" (dict "page" . "variant" "feature") }}
+      {{- end -}}
+    {{- end }}
+
+    {{- with $rest }}
+      <div class="ed-grid">
+        {{- range . }}
+          {{ partial "editorial/card.html" (dict "page" . "variant" "card") }}
+        {{- end }}
+      </div>
+    {{- end }}
+
+    {{ if eq (len $pages) 0 }}
+      <p class="ed-standfirst"><em>Nothing here yet.</em></p>
+    {{ end }}
+  </div>
+{{ end }}

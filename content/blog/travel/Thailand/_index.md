@@ -2,7 +2,7 @@
 title: "Thailand"
 weight: 5
 draft: false
-description: "Thailand"
+description: "Land of smiles, spice and sea — notes still in the works."
 tags: ["TH"]
 category: ["Travel"]
 ---

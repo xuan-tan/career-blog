@@ -2,7 +2,7 @@
 title: "Vietnam"
 weight: 5
 draft: false
-description: "Vietnam"
+description: "Saigon's traffic and three days of switchbacks on the Ha Giang loop."
 tags: ["VN"]
 category: ["Travel"]
 ---

@@ -2,7 +2,7 @@
 title: "Italy"
 weight: 5
 draft: false
-description: "Italy"
+description: "Dolomites passes and the Santnerpass hut — notes still in the works."
 tags: ["IT"]
 category: ["Travel"]
 ---

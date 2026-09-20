@@ -1,6 +1,8 @@
 {{- $src := .Get "src" | default "" -}}
 {{- $alt := .Get "alt" | default "" -}}
 {{- $overlay := .Get "overlay" | default "" -}}
+{{- $title := .Get "title" | default "" -}}
+{{- $subtitle := .Get "subtitle" | default "" -}}
 {{- $height := .Get "height" | default "70" -}}
 {{- $img := "" -}}
 {{- $imgUrl := "" -}}
@@ -21,15 +23,32 @@
   {{- end -}}
 {{- end -}}
 
+{{- /* Preferred API: title + subtitle, which emit a real <h1> so the page
+       has a heading. Legacy API: `overlay` markdown, kept working — its
+       leading <strong> is styled as the display title by CSS. */ -}}
 <div class="editorial-hero" style="--hero-height: {{ $height }}vh;">
   <div class="editorial-hero-image">
-    <img src="{{ $imgUrl }}" alt="{{ $alt }}" loading="lazy">
+    <img
+      src="{{ $imgUrl }}"
+      alt="{{ $alt }}"
+      loading="eager"
+      fetchpriority="high"
+      decoding="async">
   </div>
-  {{- with $overlay -}}
+  {{- if or $title $subtitle -}}
     <div class="editorial-hero-overlay">
       <div class="editorial-hero-content">
-        {{ . | markdownify }}
+        {{ with $title }}<h1 class="ed-hero__title">{{ . | markdownify }}</h1>{{ end }}
+        {{ with $subtitle }}<p class="ed-hero__standfirst">{{ . | markdownify }}</p>{{ end }}
       </div>
     </div>
+  {{- else -}}
+    {{- with $overlay -}}
+      <div class="editorial-hero-overlay">
+        <div class="editorial-hero-content">
+          {{ . | markdownify }}
+        </div>
+      </div>
+    {{- end -}}
   {{- end -}}
 </div>

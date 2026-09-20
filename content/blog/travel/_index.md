@@ -1,6 +1,8 @@
 ---
 title: "Travel"
 description: "A Compendium of travel logs."
+layout: editorial-list
+kicker: "Journal"
 weight: 1
 cascade:
   showEdit: false
@@ -9,12 +11,7 @@ cascade:
 ---
 
 {{< lead >}}
-A Compendium of Travel Logs
+A compendium of travel logs.
 {{< /lead >}}
 
-This section contains my trips to different corners of the world.
-Explore via [taxonomy listing]({{< ref "tags" >}}) page.
-
-_**Sidenote:** This page is under build and will be updated as trips complete and are ready for review.
-
----
+Three passes in the Alps, an island crossing in Japan, a slow loop through northern Vietnam. The routes, the gear, and the things that went sideways.

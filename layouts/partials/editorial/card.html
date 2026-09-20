@@ -1,0 +1,66 @@
+{{/* editorial/card.html — a card in the editorial grid, or the lead feature.
+
+     Params:
+       page    (Page, required)
+       variant ("card" | "feature", default "card")
+*/}}
+{{- $page := .page -}}
+{{- $variant := .variant | default "card" -}}
+{{- $isFeature := eq $variant "feature" -}}
+{{- $width := cond $isFeature 1600 900 -}}
+{{- $img := partial "editorial/image.html" (dict "page" $page "width" $width) -}}
+{{- $href := $page.RelPermalink -}}
+{{- with $page.Params.externalUrl -}}{{- $href = . -}}{{- end -}}
+
+{{/* Meta: tags + entry count for sections, date + reading time for posts */}}
+{{- $meta := slice -}}
+{{- with $page.Params.tags -}}
+  {{- range . -}}
+    {{- $meta = $meta | append . -}}
+  {{- end -}}
+{{- end -}}
+{{- if $page.IsSection -}}
+  {{- with len $page.RegularPagesRecursive -}}
+    {{- $meta = $meta | append (printf "%d %s" . (cond (eq . 1) "entry" "entries")) -}}
+  {{- end -}}
+{{- else -}}
+  {{- if not $page.Date.IsZero -}}
+    {{- $meta = $meta | append ($page.Date.Format "2 Jan 2006") -}}
+  {{- end -}}
+  {{- $meta = $meta | append (printf "%d min read" $page.ReadingTime) -}}
+{{- end -}}
+{{- $metaStr := delimit $meta " · " -}}
+
+{{- $summary := "" -}}
+{{- with $page.Params.description -}}
+  {{- $summary = . -}}
+{{- end -}}
+{{- if or (eq $summary "") (eq $summary $page.Title) -}}
+  {{- $summary = $page.Summary | plainify | strings.TrimSpace -}}
+{{- end -}}
+
+{{- if $isFeature -}}
+<article class="ed-feature">
+  {{- with $img }}
+  <a class="ed-feature__media" href="{{ $href }}" tabindex="-1" aria-hidden="true">
+    <img src="{{ . }}" alt="" loading="eager" decoding="async">
+  </a>
+  {{- end }}
+  <div class="ed-feature__body">
+    {{ with $metaStr }}<p class="ed-eyebrow">{{ . }}</p>{{ end }}
+    <h2 class="ed-feature__title"><a href="{{ $href }}">{{ $page.Title | emojify }}</a></h2>
+    {{ with $summary }}<p class="ed-standfirst ed-feature__standfirst">{{ . | plainify | truncate 220 }}</p>{{ end }}
+  </div>
+</article>
+{{- else -}}
+<article class="ed-card">
+  {{- with $img }}
+  <a class="ed-card__media" href="{{ $href }}" tabindex="-1" aria-hidden="true">
+    <img src="{{ . }}" alt="" loading="lazy" decoding="async">
+  </a>
+  {{- end }}
+  {{ with $metaStr }}<p class="ed-eyebrow">{{ . }}</p>{{ end }}
+  <h3 class="ed-card__title"><a href="{{ $href }}">{{ $page.Title | emojify }}</a></h3>
+  {{ with $summary }}<p class="ed-card__summary">{{ . | plainify | truncate 140 }}</p>{{ end }}
+</article>
+{{- end -}}

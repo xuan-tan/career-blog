@@ -2,7 +2,8 @@
 title: "Switzerland"
 weight: 5
 draft: false
-description: "Switzerland"
+feature: true
+description: "Three passes, three days, one ridge at a time — the Susten, Grimsel and Furka loop."
 tags: ["CH"]
 category: ["Travel"]
 ---

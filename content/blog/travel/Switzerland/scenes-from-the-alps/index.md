@@ -15,7 +15,7 @@ category:
   - Travel
 ---
 
-{{< hero src="featured.jpg" overlay="**Three Passes, Three Days** <br>One ridge at a time — photo journal from the Susten, Grimsel & Furka loop." height="75" >}}
+{{< hero src="featured.jpg" title="Three Passes, Three Days" subtitle="One ridge at a time — photo journal from the Susten, Grimsel & Furka loop." height="75" >}}
 
 {{< content-block side="center" width="narrow" >}}
 
