@@ -262,8 +262,7 @@ hr {
 }
 
 /* Utility primitives used across templates */
-.ed-eyebrow,
-.ed-meta {
+.ed-eyebrow {
   font-family: var(--font-meta);
   font-size: var(--type-meta);
   font-weight: 500;
@@ -271,6 +270,58 @@ hr {
   letter-spacing: var(--track-meta);
   text-transform: uppercase;
   color: var(--ink-3);
+}
+
+/* ---- Meta line on editorial cards ----
+   Two deliberate ranks so it reads as information rather than a run of
+   identical labels:
+     1. TAGS - navigable but the least important item, so they sit a step
+        BELOW the descriptor: --type-micro, weight 400, muted ink. Each is
+        a real link to its /tags/<term>/ page.
+     2. DESCRIPTOR - date / reading time / entry count: --type-meta, weight
+        500, brighter ink. Not a link.
+   Differ by size AND weight AND ink, so the distinction survives greyscale.
+   The separator is the faintest ink and matches the tag size. */
+.ed-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4em;
+  font-family: var(--font-meta);
+  font-size: var(--type-meta);
+  line-height: var(--leading-meta);
+  letter-spacing: var(--track-meta);
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.ed-meta__tags {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4em;
+}
+.ed-meta__tag {
+  font-size: var(--type-micro);
+  font-weight: 400;
+  letter-spacing: var(--track-meta);
+  color: var(--ink-3);
+  text-decoration: none;
+  transition: color 140ms ease;
+}
+.ed-meta__tag:hover,
+.ed-meta__tag:focus-visible {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+.ed-meta__sep {
+  font-size: var(--type-micro);
+  color: var(--ink-4);
+}
+.ed-meta__info {
+  font-size: var(--type-meta);
+  font-weight: 500;
+  color: var(--ink-2);
 }
 
 /* Desktop nav wears the same label treatment as the page labels: small,
@@ -294,8 +345,7 @@ hr {
   font-weight: 500;
 }
 
-/* Blowfish sizes icons in `em`, so the chevrons were inheriting the
-   anchor's 16px and read oversized against the 12px label. */
+/* Icons are em-based, so bring the icon span onto the label scale. */
 .site-nav-desktop nav a span.icon {
   font-size: var(--type-meta);
 }
@@ -309,13 +359,6 @@ hr {
   display: inline-flex;
   align-items: center;
   line-height: 1;
-}
-.ed-meta a {
-  color: var(--ink-2);
-  text-decoration: none;
-}
-.ed-meta a:hover {
-  color: var(--accent);
 }
 .ed-standfirst {
   font-family: var(--font-text);
@@ -501,7 +544,7 @@ hr {
        baseline instead of their box tops, which read as misaligned. */
     align-items: baseline;
   }
-  .ed-feature__body > .ed-eyebrow {
+  .ed-feature__body > .ed-meta {
     grid-column: 1 / -1;
   }
   .ed-feature__title {
