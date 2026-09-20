@@ -12,19 +12,19 @@
 
 [[main]]
   name = "Journal"
-  pageRef = "blog"
+  pageRef = "journal"
   weight = 2
 
 #[[main]]
 #  name = "Career"
 #  parent = "Journal"
-#  pageRef = "blog/career"
+#  pageRef = "journal/career"
 #  weight = 10
 
 [[main]]
   name = "Travel"
   parent = "Journal"
-  pageRef = "blog/travel"
+  pageRef = "journal/travel"
   weight = 5
 
 [[main]]

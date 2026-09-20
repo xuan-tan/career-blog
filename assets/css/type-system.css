@@ -272,6 +272,44 @@ hr {
   text-transform: uppercase;
   color: var(--ink-3);
 }
+
+/* Desktop nav wears the same label treatment as the page labels: small,
+   uppercase, tracked. Scoped to `.site-nav-desktop`, a marker class added
+   in layouts/partials/header/basic.html around the desktop menu only.
+   NOT `.main-menu nav` - Blowfish uses the `main-menu` class TWICE (desktop
+   row + full-screen mobile drawer), so that would shrink the mobile
+   drawer's 24px items to 12px uppercase.
+
+   Selector deliberately targets only the TEXT spans, never the <a> or the
+   icon wrapper spans. Blowfish sizes its icons in `em`, so a font-size on
+   the anchor scales the chevrons too and knocks them out of alignment.
+   The three text spans are the two [title] ones plus the `break-normal`
+   leaf items; icon wrappers have neither attribute nor that class.
+   Keep this in sync with .ed-eyebrow above - they are the same voice. */
+.site-nav-desktop nav a > span[title],
+.site-nav-desktop nav a > span.break-normal {
+  font-size: var(--type-meta);
+  letter-spacing: var(--track-meta);
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+/* Blowfish sizes icons in `em`, so the chevrons were inheriting the
+   anchor's 16px and read oversized against the 12px label. */
+.site-nav-desktop nav a span.icon {
+  font-size: var(--type-meta);
+}
+
+/* The icon's wrapper span keeps the anchor's tall line box (leading-7), so
+   the small block-level icon top-aligned itself inside it and floated high
+   of the caps. Make the wrapper a centred flex box instead.
+   Selected by exclusion: text spans carry [title] or .break-normal, so
+   what is left is the icon wrapper. */
+.site-nav-desktop nav a > span:not([title]):not(.break-normal):not(.mr-1) {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+}
 .ed-meta a {
   color: var(--ink-2);
   text-decoration: none;
