@@ -60,9 +60,30 @@
   --space-block: 2.5rem;
   --space-section: 4.5rem;
 
+  /* Clearance under the theme's fixed header. Any surface that starts at
+     the top of the viewport offsets by this, in both directions. */
+  --header-offset: 148px;
+
+  /* Scrims over photography. Shared: the editorial hero, full-width image
+     blocks and the home rail all darken an image so text can sit on it.
+     Value lives here once; the compositions that stack them do not. */
+  --scrim-photo: linear-gradient(
+    to top,
+    rgb(0 0 0 / 0.7) 0%,
+    rgb(0 0 0 / 0.1) 60%,
+    rgb(0 0 0 / 0.1) 100%
+  );
+  --scrim-card: linear-gradient(
+    to top,
+    rgb(0 0 0 / 0.9) 0%,
+    rgb(0 0 0 / 0.5) 55%,
+    transparent 100%
+  );
+
   /* Radii — near-zero. Editorial pages are not app chrome. */
   --radius-sm: 2px;
   --radius-md: 3px;
+  --radius-pill: 999px;
 
   /* ---------- Ink ramp: DARK is the default (site defaultAppearance) ---------- */
   --surface-0: #1b1a18;
@@ -103,6 +124,15 @@ html:not(.dark) {
    is created and `position: sticky` keeps working. */
 html {
   overflow-x: clip;
+}
+
+/* Full-bleed breakout, one definition. Anything meant to reach both
+   viewport edges adds this class instead of repeating the pair.
+   Only works while <body> spans the viewport — see §9 of the design
+   system before clipping an ancestor. */
+.ed-bleed {
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
 }
 
 /* UI chrome (nav, buttons, badges) inherits Inter from the theme's
@@ -796,8 +826,7 @@ hr {
   --hero-veil-light-y0: 0.5;
   --hero-veil-light-y1: 0.15;
 
-  /* Geometry. --hero-chrome is the fixed header the hero slides under. */
-  --hero-chrome: 148px;
+  /* Geometry. Header clearance comes from --header-offset (shared). */
   --hero-anchor-w: 30%;
   --hero-anchor-pad: 5vw;
   --hero-anchor-max: 380px;
@@ -816,20 +845,6 @@ hr {
   --hero-card-gap: 12px;
   --hero-card-shadow: 0 12px 40px rgb(0 0 0 / 0.4);
   --hero-card-fallback: linear-gradient(135deg, #334155, #1e293b);
-  --hero-card-scrim: linear-gradient(
-    to top,
-    rgb(0 0 0 / 0.9) 0%,
-    rgb(0 0 0 / 0.5) 55%,
-    transparent 100%
-  );
-
-  /* Chrome over photography — deliberately mode-independent white,
-     because it always sits on a photograph, not on a surface. */
-  --hero-chrome-line: rgb(255 255 255 / 0.25);
-  --hero-chrome-line-hi: rgb(255 255 255 / 0.55);
-  --hero-chrome-ink: rgb(255 255 255 / 0.5);
-  --hero-chrome-ink-hi: #fff;
-  --hero-chrome-dim: rgb(255 255 255 / 0.35);
 
   /* Hero ink. The anchor column sits on a photograph, not on a surface,
      so it does not use the surface ink ramp: contrast is against an image
@@ -839,6 +854,16 @@ hr {
   --hero-ghost-line: rgb(255 255 255 / 0.35);
   --hero-ghost-line-hi: rgb(255 255 255 / 0.55);
   --hero-ghost-fill: rgb(255 255 255 / 0.08);
+
+  /* Chrome over photography — mode-independent white, because it is always
+     over an image, never over a surface. Shared by any control or label
+     that sits on a photo; hero ink above is different because it is driven
+     by the mode-dependent veil. */
+  --on-photo-line: rgb(255 255 255 / 0.25);
+  --on-photo-line-hi: rgb(255 255 255 / 0.55);
+  --on-photo-ink: rgb(255 255 255 / 0.5);
+  --on-photo-ink-hi: #fff;
+  --on-photo-dim: rgb(255 255 255 / 0.35);
 }
 
 html:not(.dark) {
@@ -858,9 +883,7 @@ html:not(.dark) {
 .ed-hero {
   position: relative;
   z-index: 1;
-  width: 100vw;
-  margin-left: calc(-50vw + 50%);
-  margin-top: calc(var(--hero-chrome) * -1);
+  margin-top: calc(var(--header-offset) * -1);
   height: 100vh;
   overflow: hidden;
   background: var(--hero-plate);
@@ -938,7 +961,7 @@ html:not(.dark) .ed-hero__veil {
   z-index: 3;
   display: flex;
   height: 100%;
-  padding-top: var(--hero-chrome);
+  padding-top: var(--header-offset);
 }
 
 /* ---------- E5. Anchor column ---------- */
@@ -988,7 +1011,7 @@ html:not(.dark) .ed-hero__veil {
   text-decoration: none;
   padding: 0.625rem 1.75rem;
   border: 1px solid var(--hero-ghost-line);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   color: var(--hero-ink);
   transition: background-color 300ms, border-color 300ms;
 }
@@ -1060,7 +1083,7 @@ html:not(.dark) .ed-hero__veil {
   justify-content: flex-end;
   height: 35%;
   padding: 1rem 1.25rem;
-  background: var(--hero-card-scrim);
+  background: var(--scrim-card);
 }
 .ed-hero-card__label {
   display: -webkit-box;
@@ -1070,7 +1093,7 @@ html:not(.dark) .ed-hero__veil {
   font-weight: 500;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--hero-chrome-ink);
+  color: var(--on-photo-ink);
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
 }
@@ -1080,7 +1103,7 @@ html:not(.dark) .ed-hero__veil {
   font-size: 0.9375rem;
   font-weight: 500;
   line-height: 1.25;
-  color: var(--hero-chrome-ink-hi);
+  color: var(--on-photo-ink-hi);
 }
 
 /* ---------- E7. Rail controls ---------- */
@@ -1097,16 +1120,16 @@ html:not(.dark) .ed-hero__veil {
   justify-content: center;
   width: 1.75rem;
   height: 1.75rem;
-  border: 1px solid var(--hero-chrome-line);
-  border-radius: 999px;
+  border: 1px solid var(--on-photo-line);
+  border-radius: var(--radius-pill);
   background: none;
-  color: var(--hero-chrome-ink);
+  color: var(--on-photo-ink);
   cursor: pointer;
   transition: border-color 200ms, color 200ms;
 }
 .ed-nav-btn:hover {
-  border-color: var(--hero-chrome-line-hi);
-  color: var(--hero-chrome-ink-hi);
+  border-color: var(--on-photo-line-hi);
+  color: var(--on-photo-ink-hi);
 }
 .ed-nav-btn:disabled {
   opacity: 0.3;
@@ -1130,14 +1153,14 @@ html:not(.dark) .ed-hero__veil {
 }
 .ed-hero__meter-fill {
   height: 100%;
-  background: var(--hero-chrome-line-hi);
+  background: var(--on-photo-line-hi);
   transition: width 500ms;
 }
 .ed-hero__idx {
   margin-left: auto;
   font-family: var(--font-mono);
   font-size: 0.625rem;
-  color: var(--hero-chrome-dim);
+  color: var(--on-photo-dim);
 }
 
 /* ---------- E8. Stacked layout ---------- */
