@@ -432,7 +432,6 @@ hr {
   font-family: var(--font-text);
   font-size: var(--type-lead);
   line-height: var(--leading-lead);
-  max-width: var(--measure-body);
   color: var(--ink-2);
 }
 
@@ -447,10 +446,16 @@ hr {
 }
 
 /* Body copy under the deck is one rank down: --type-lead -> --type-body.
-   Also drops from the secondary ink to the body ink. */
+   Also drops from the secondary ink to the body ink.
+
+   The measure sits here, on the text, not on the container: `ch` resolves
+   against the element's own font-size, so a measure on the lead-sized
+   container computes ~985px and lets 19px body copy run to ~95 characters
+   a line. Each run carries the measure it is actually read at. */
 .ed-standfirst p {
   font-size: var(--type-body);
   line-height: var(--leading-body);
+  max-width: var(--measure-body);
   color: var(--ink-1);
 }
 
@@ -556,12 +561,33 @@ hr {
   margin-bottom: 3.5rem;
 }
 .ed-list__title {
-  font-size: var(--type-display-l);
+  font-size: var(--type-h1);
   line-height: var(--leading-display);
   letter-spacing: var(--track-display);
   font-weight: var(--weight-display);
   color: var(--ink-0);
   margin: 0.5rem 0 0;
+}
+
+/* Masthead copy. A section index is a shelf, not an article: the intro says
+   where you are, then gets out of the way of the cards. Deck stays at lead
+   scale as the one large line; everything under it drops to small print so
+   the feature and card titles below keep the hierarchy they already have.
+   Scoped to the list header — article decks and the feature standfirst keep
+   the reading scale. */
+.ed-list__header .ed-standfirst p {
+  font-size: var(--type-small);
+  line-height: var(--leading-body);
+  max-width: var(--measure-body);
+  color: var(--ink-2);
+}
+/* The deck keeps its rank: it is the one line allowed to be large. */
+.ed-list__header .ed-standfirst > .lead,
+.ed-list__header .ed-standfirst > p:first-child {
+  font-size: var(--type-lead);
+  line-height: var(--leading-lead);
+  max-width: var(--measure-lead);
+  color: var(--ink-2);
 }
 
 /* Feature: full-width banner, then title left / standfirst right.
