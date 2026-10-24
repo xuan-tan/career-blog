@@ -60,6 +60,10 @@
   --space-block: 2.5rem;
   --space-section: 4.5rem;
 
+  /* Control box. One button shape site-wide: this padding plus --radius-pill. */
+  --space-control-y: 0.625rem;
+  --space-control-x: 1.75rem;
+
   /* Clearance under the theme's fixed header. Any surface that starts at
      the top of the viewport offsets by this, in both directions. */
   --header-offset: 148px;
@@ -323,6 +327,11 @@ hr {
   letter-spacing: var(--track-meta);
   text-transform: uppercase;
   color: var(--ink-3);
+}
+
+/* Same voice, sitting on a photograph rather than a surface. */
+.ed-eyebrow--on-photo {
+  color: var(--on-photo-ink);
 }
 
 /* ---- Meta line on editorial cards ----
@@ -986,7 +995,7 @@ html:not(.dark) .ed-hero__veil {
 }
 .ed-hero__lede {
   font-family: var(--font-text);
-  font-size: 0.875rem;
+  font-size: var(--type-small);
   font-weight: var(--weight-light);
   line-height: 1.7;
   max-width: var(--measure-hero-lede);
@@ -1004,12 +1013,12 @@ html:not(.dark) .ed-hero__veil {
 .ed-btn-ghost {
   display: inline-block;
   font-family: var(--font-meta);
-  font-size: 0.6875rem;
+  font-size: var(--type-micro);
   font-weight: 500;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   text-decoration: none;
-  padding: 0.625rem 1.75rem;
+  padding: var(--space-control-y) var(--space-control-x);
   border: 1px solid var(--hero-ghost-line);
   border-radius: var(--radius-pill);
   color: var(--hero-ink);
@@ -1085,22 +1094,17 @@ html:not(.dark) .ed-hero__veil {
   padding: 1rem 1.25rem;
   background: var(--scrim-card);
 }
+/* Label = the site eyebrow voice, on a photo. Only the clamp is local. */
 .ed-hero-card__label {
   display: -webkit-box;
   overflow: hidden;
-  font-family: var(--font-meta);
-  font-size: 0.5625rem;
-  font-weight: 500;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--on-photo-ink);
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
 }
 .ed-hero-card__title {
   margin-top: 0.25rem;
   font-family: var(--font-display);
-  font-size: 0.9375rem;
+  font-size: var(--type-small);
   font-weight: 500;
   line-height: 1.25;
   color: var(--on-photo-ink-hi);
@@ -1159,7 +1163,7 @@ html:not(.dark) .ed-hero__veil {
 .ed-hero__idx {
   margin-left: auto;
   font-family: var(--font-mono);
-  font-size: 0.625rem;
+  font-size: var(--type-micro);
   color: var(--on-photo-dim);
 }
 
