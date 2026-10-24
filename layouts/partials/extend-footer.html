@@ -1,2 +1,6 @@
 {{ $scrollReveal := resources.Get "js/scroll-reveal.js" | resources.Minify | resources.Fingerprint site.Params.fingerprintAlgorithm | default "sha512" }}
 <script defer src="{{ $scrollReveal.RelPermalink }}" integrity="{{ $scrollReveal.Data.Integrity }}"></script>
+
+{{/* Home hero card rail — inert on every other page. */}}
+{{ $heroCarousel := resources.Get "js/hero-carousel.js" | resources.Minify | resources.Fingerprint site.Params.fingerprintAlgorithm | default "sha512" }}
+<script defer src="{{ $heroCarousel.RelPermalink }}" integrity="{{ $heroCarousel.Data.Integrity }}"></script>

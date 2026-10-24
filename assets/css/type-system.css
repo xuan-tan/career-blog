@@ -759,3 +759,437 @@ hr {
     aspect-ratio: 3 / 2;
   }
 }
+
+/* ============================================================
+   E. HOME HERO — full-bleed landing
+   ------------------------------------------------------------
+   The one surface that is not editorial reading flow: a photographic
+   landing with an anchor column and a card rail. It lives here (not in
+   custom.css) because it is a page-level composition built from tokens,
+   not a shortcode.
+
+   Every value used to be inline in layouts/partials/home/custom.html.
+   Nothing here may reintroduce a raw colour or length — see
+   .design-system.md §10 for the conventions this encodes.
+   ============================================================ */
+
+/* ---------- E1. Hero tokens ---------- */
+:root {
+  /* Backdrop. Only visible before the photo paints, or if it is missing,
+     so it reads as a neutral plate in each mode rather than a colour. */
+  --hero-plate: #0f172a;
+  --hero-plate-light: #f5f5f0;
+
+  /* Veil. One base colour per mode, six alphas: the horizontal gradient
+     holds the anchor column legible and lets the rail breathe; the
+     vertical one anchors the bottom edge. */
+  --hero-veil: 15 23 42;
+  --hero-veil-x0: 0.85;
+  --hero-veil-x1: 0.4;
+  --hero-veil-x2: 0.7;
+  --hero-veil-y0: 0.6;
+  --hero-veil-y1: 0.2;
+  --hero-veil-light: 245 245 240;
+  --hero-veil-light-x0: 0.85;
+  --hero-veil-light-x1: 0.2;
+  --hero-veil-light-x2: 0.5;
+  --hero-veil-light-y0: 0.5;
+  --hero-veil-light-y1: 0.15;
+
+  /* Geometry. --hero-chrome is the fixed header the hero slides under. */
+  --hero-chrome: 148px;
+  --hero-anchor-w: 30%;
+  --hero-anchor-pad: 5vw;
+  --hero-anchor-max: 380px;
+  --hero-rail-inset: 15vw;
+
+  /* Landing title. Sized in vh on purpose: it is a viewport composition,
+     not a document heading, so it scales with the window, not the measure. */
+  --type-hero-landing: clamp(3rem, 12.5vh, 6.5rem);
+  --measure-hero-lede: 340px;
+
+  /* Card rail. Shared by every breakpoint. */
+  --hero-card-w: auto;
+  --hero-card-h: 35vh;
+  --hero-card-ratio: 2 / 3;
+  --hero-card-radius: 16px;
+  --hero-card-gap: 12px;
+  --hero-card-shadow: 0 12px 40px rgb(0 0 0 / 0.4);
+  --hero-card-fallback: linear-gradient(135deg, #334155, #1e293b);
+  --hero-card-scrim: linear-gradient(
+    to top,
+    rgb(0 0 0 / 0.9) 0%,
+    rgb(0 0 0 / 0.5) 55%,
+    transparent 100%
+  );
+
+  /* Chrome over photography — deliberately mode-independent white,
+     because it always sits on a photograph, not on a surface. */
+  --hero-chrome-line: rgb(255 255 255 / 0.25);
+  --hero-chrome-line-hi: rgb(255 255 255 / 0.55);
+  --hero-chrome-ink: rgb(255 255 255 / 0.5);
+  --hero-chrome-ink-hi: #fff;
+  --hero-chrome-dim: rgb(255 255 255 / 0.35);
+
+  /* Hero ink. The anchor column sits on a photograph, not on a surface,
+     so it does not use the surface ink ramp: contrast is against an image
+     whose brightness we cannot know. Near-white / near-black only. */
+  --hero-ink: #fff;
+  --hero-ink-dim: rgb(255 255 255 / 0.65);
+  --hero-ghost-line: rgb(255 255 255 / 0.35);
+  --hero-ghost-line-hi: rgb(255 255 255 / 0.55);
+  --hero-ghost-fill: rgb(255 255 255 / 0.08);
+}
+
+html:not(.dark) {
+  --hero-ink: #1a1a1a;
+  --hero-ink-dim: rgb(0 0 0 / 0.6);
+  --hero-ghost-line: rgb(0 0 0 / 0.25);
+  --hero-ghost-line-hi: rgb(0 0 0 / 0.4);
+  --hero-ghost-fill: rgb(0 0 0 / 0.05);
+}
+
+/* ---------- E2. Shell ---------- */
+
+/* Full-bleed breakout. --50vw + 50% only lands on the viewport edge while
+   <body> is the containing block's full width — which is why the scroll
+   lock below must not be applied to <body> (it is max-w-7xl there, and
+   clipping at that box leaves bare plate down both sides). */
+.ed-hero {
+  position: relative;
+  z-index: 1;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-top: calc(var(--hero-chrome) * -1);
+  height: 100vh;
+  overflow: hidden;
+  background: var(--hero-plate);
+}
+html:not(.dark) .ed-hero {
+  background: var(--hero-plate-light);
+}
+
+/* Scroll lock. Desktop only — below that the hero stacks and the page
+   must scroll. Clip, not hidden: no scroll container is created, so
+   nothing sticky inside the page breaks. :has() scopes it to the one
+   page that renders a hero. */
+@media (min-width: 1024px) {
+  html:has(.ed-hero) {
+    overflow: clip;
+  }
+}
+
+/* ---------- E3. Backdrop + veil ---------- */
+.ed-hero__bg {
+  position: absolute;
+  inset: 0;
+}
+.ed-hero__bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.ed-hero__bg--light {
+  display: none;
+}
+html:not(.dark) .ed-hero__bg--light {
+  display: block;
+}
+html:not(.dark) .ed-hero__bg--dark {
+  display: none;
+}
+
+.ed-hero__veil {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      to right,
+      rgb(var(--hero-veil) / var(--hero-veil-x0)) 0,
+      rgb(var(--hero-veil) / var(--hero-veil-x1)) 50%,
+      rgb(var(--hero-veil) / var(--hero-veil-x2)) 100%
+    ),
+    linear-gradient(
+      to top,
+      rgb(var(--hero-veil) / var(--hero-veil-y0)) 0,
+      transparent 50%,
+      rgb(var(--hero-veil) / var(--hero-veil-y1)) 100%
+    );
+}
+html:not(.dark) .ed-hero__veil {
+  background:
+    linear-gradient(
+      to right,
+      rgb(var(--hero-veil-light) / var(--hero-veil-light-x0)) 0,
+      rgb(var(--hero-veil-light) / var(--hero-veil-light-x1)) 50%,
+      rgb(var(--hero-veil-light) / var(--hero-veil-light-x2)) 100%
+    ),
+    linear-gradient(
+      to top,
+      rgb(var(--hero-veil-light) / var(--hero-veil-light-y0)) 0,
+      transparent 50%,
+      rgb(var(--hero-veil-light) / var(--hero-veil-light-y1)) 100%
+    );
+}
+
+/* ---------- E4. Row: anchor | rail ---------- */
+.ed-hero__row {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  height: 100%;
+  padding-top: var(--hero-chrome);
+}
+
+/* ---------- E5. Anchor column ---------- */
+.ed-hero__anchor {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: var(--hero-anchor-w);
+  padding-left: var(--hero-anchor-pad);
+}
+.ed-hero__anchor-inner {
+  max-width: var(--hero-anchor-max);
+}
+.ed-hero__title {
+  font-family: var(--font-display);
+  font-size: var(--type-hero-landing);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  margin-bottom: 0.75rem;
+  color: var(--hero-ink);
+}
+.ed-hero__lede {
+  font-family: var(--font-text);
+  font-size: 0.875rem;
+  font-weight: var(--weight-light);
+  line-height: 1.7;
+  max-width: var(--measure-hero-lede);
+  color: var(--hero-ink-dim);
+}
+.ed-hero__cta {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  margin-top: 1.75rem;
+}
+
+/* Ghost button — the hero's only control. Outline only, per the
+   no-decoration principle; it distinguishes by weight, not fill. */
+.ed-btn-ghost {
+  display: inline-block;
+  font-family: var(--font-meta);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 0.625rem 1.75rem;
+  border: 1px solid var(--hero-ghost-line);
+  border-radius: 999px;
+  color: var(--hero-ink);
+  transition: background-color 300ms, border-color 300ms;
+}
+.ed-btn-ghost:hover {
+  border-color: var(--hero-ghost-line-hi);
+  background: var(--hero-ghost-fill);
+}
+
+/* ---------- E6. Card rail ---------- */
+.ed-hero__rail {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  width: calc(100% - var(--hero-anchor-w));
+}
+.ed-hero__rail-inner {
+  width: 100%;
+}
+.ed-hero__vp {
+  overflow: hidden;
+  padding-left: var(--hero-rail-inset);
+}
+.ed-hero__track {
+  display: flex;
+  gap: var(--hero-card-gap);
+  transition: transform 500ms ease-out;
+}
+
+/* Card. The rail is a single row of equal plates cut off by the viewport
+   edge — the cut is the affordance, so no card is full-width. */
+.ed-hero-card {
+  position: relative;
+  display: block;
+  flex-shrink: 0;
+  width: var(--hero-card-w);
+  height: var(--hero-card-h);
+  aspect-ratio: var(--hero-card-ratio);
+  border-radius: var(--hero-card-radius);
+  overflow: hidden;
+  box-shadow: var(--hero-card-shadow);
+  text-decoration: none;
+}
+.ed-hero-card__bg {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background: var(--hero-card-fallback);
+  background-size: cover;
+  background-position: center;
+}
+/* Falls back to a glyph only when the section has no featured image. */
+.ed-hero-card__glyph {
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  opacity: 0.65;
+  user-select: none;
+  pointer-events: none;
+}
+.ed-hero-card__scrim {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 35%;
+  padding: 1rem 1.25rem;
+  background: var(--hero-card-scrim);
+}
+.ed-hero-card__label {
+  display: -webkit-box;
+  overflow: hidden;
+  font-family: var(--font-meta);
+  font-size: 0.5625rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--hero-chrome-ink);
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+.ed-hero-card__title {
+  margin-top: 0.25rem;
+  font-family: var(--font-display);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--hero-chrome-ink-hi);
+}
+
+/* ---------- E7. Rail controls ---------- */
+.ed-hero__nav {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin-top: 1rem;
+  padding-left: var(--hero-rail-inset);
+}
+.ed-nav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: 1px solid var(--hero-chrome-line);
+  border-radius: 999px;
+  background: none;
+  color: var(--hero-chrome-ink);
+  cursor: pointer;
+  transition: border-color 200ms, color 200ms;
+}
+.ed-nav-btn:hover {
+  border-color: var(--hero-chrome-line-hi);
+  color: var(--hero-chrome-ink-hi);
+}
+.ed-nav-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+.ed-nav-btn svg {
+  width: 0.625rem;
+  height: 0.625rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.ed-hero__meter {
+  flex: 1;
+  max-width: 5rem;
+  height: 1px;
+  margin-left: 0.25rem;
+  background: rgb(255 255 255 / 0.15);
+}
+.ed-hero__meter-fill {
+  height: 100%;
+  background: var(--hero-chrome-line-hi);
+  transition: width 500ms;
+}
+.ed-hero__idx {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  color: var(--hero-chrome-dim);
+}
+
+/* ---------- E8. Stacked layout ---------- */
+@media (max-width: 1023px) {
+  .ed-hero {
+    height: auto;
+    min-height: 100vh;
+  }
+  .ed-hero__row {
+    flex-direction: column;
+  }
+  .ed-hero__anchor {
+    justify-content: center;
+    width: 100%;
+    padding: 3.75rem 1.5rem 1.5rem;
+    text-align: center;
+  }
+  .ed-hero__anchor-inner {
+    max-width: 100%;
+  }
+  .ed-hero__lede {
+    margin: 0 auto;
+  }
+  .ed-hero__cta {
+    justify-content: center;
+  }
+  .ed-hero__rail {
+    justify-content: center;
+    width: 100%;
+    padding-bottom: 2.5rem;
+  }
+  .ed-hero__rail-inner {
+    width: auto;
+    max-width: 100%;
+  }
+  .ed-hero__vp {
+    padding-left: 0;
+  }
+  .ed-hero__track {
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+  .ed-hero-card {
+    width: 6.25rem;
+    height: 9.375rem;
+    scroll-snap-align: start;
+  }
+  .ed-hero__nav {
+    justify-content: center;
+    margin-top: 0.75rem;
+    padding-left: 0;
+  }
+}
