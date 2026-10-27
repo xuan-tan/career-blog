@@ -26,7 +26,7 @@
 {{- /* Preferred API: title + subtitle, which emit a real <h1> so the page
        has a heading. Legacy API: `overlay` markdown, kept working — its
        leading <strong> is styled as the display title by CSS. */ -}}
-<div class="editorial-hero" style="--hero-height: {{ $height }}vh;">
+<div class="editorial-hero ed-bleed" style="--hero-height: {{ $height }}vh;">
   <div class="editorial-hero-image">
     <img
       src="{{ $imgUrl }}"

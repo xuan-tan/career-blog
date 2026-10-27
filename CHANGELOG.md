@@ -6,6 +6,43 @@ This is the first entry — earlier history lives in `git log`.
 
 ---
 
+## [2026-10-24] — Home hero joins the design system
+
+### Fixed
+
+- **Full-bleed hero was cropped to 1280px.** The partial locked scroll with
+  `body { overflow: hidden }`, but Blowfish's `<body>` is `max-w-7xl`, so that box became the
+  clip for a `100vw` breakout — the hero stopped 160px short on both sides, leaving bare plate
+  as two vertical bars on any window wider than 1280px. Scroll lock moved to
+  `html:has(.ed-hero) { overflow: clip }`: viewport-width clipping (no scroll container), and
+  scoped to the one page that renders a hero.
+
+### Changed
+
+- **Hero moved out of the template into the system.** 200 lines of inline `<style>`, hardcoded
+  hex (`#0f172a`, `#f5f5f0`) and inline `style=""` on cards became `.ed-hero*` blocks plus
+  `--hero-*` tokens in `assets/css/type-system.css` (§E). Markup in
+  `layouts/partials/home/custom.html` is now markup only.
+- **`assets/js/hero-carousel.js`** — rail behaviour extracted from an inline script, hooked by
+  `data-hero-carousel`, loaded from `extend-footer.html`. It reads the card gap from the CSS
+  token instead of carrying its own `12`.
+- **`--hero-veil` stores channels space-separated** so components can write
+  `rgb(var(--hero-veil) / 0.85)`; the comma form silently dropped the whole gradient.
+- **`.design-system.md` §10 "Conventions"** — which file a change belongs in, token rules
+  (including the two-ink-systems split), naming, the inline-style rule, page-level breakout
+  requirements, and the order of work. §8 map corrected; display face labels changed from
+  Fraunces to EB Garamond (stale since the swap); §9 gained the pixel-diff proof method and two
+  harness gotchas.
+
+### Verified
+
+- Pixel diff against the pre-refactor render: 1440x900 / 1280x800 / 390x844, 5.5% of pixels
+  differ by any amount, **0.005% above 8/255** — 62 px in a single 12x8 cluster at the rail
+  index glyph. Hero spans 0→viewport width at every size. Light mode resolves to the same
+  computed values as before (veil, plate, ink, ghost border).
+
+---
+
 ## [2026-09-20] — Editorial redesign
 
 ### Added

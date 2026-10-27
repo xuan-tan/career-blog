@@ -1,8 +1,8 @@
 ---
-title: "Sooty 001 and 002"
-weight: 1
+title: "Titanium Road Machines"
+weight: 2
 draft: false
-description: "R&D"
+description: "In pursuit of a forever bike, chasing a carpet like ride quality on tarmac."
 tags: ["bikes","titanium","breakaway","2024"]
 category: ["Bikes"]
 ---

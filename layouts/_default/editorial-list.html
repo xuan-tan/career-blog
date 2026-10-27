@@ -16,11 +16,19 @@
     {{- with $pages -}}{{- $featureRel = (index . 0).RelPermalink -}}{{- end -}}
   {{- end -}}
   {{- $rest := where $pages "RelPermalink" "ne" $featureRel -}}
-  {{- $kicker := .Params.kicker | default "Journal" -}}
+  {{/* Eyebrow: explicit `kicker`, else the parent section's title, so a section
+       inside Craft says Craft and not a hardcoded Journal. Top-level sections
+       have no ancestor to name, so they simply have no eyebrow. */}}
+  {{- $kicker := .Params.kicker -}}
+  {{- if not $kicker -}}
+    {{- with .Parent -}}
+      {{- if not .IsHome -}}{{- $kicker = .Title -}}{{- end -}}
+    {{- end -}}
+  {{- end -}}
 
   <div class="ed-list">
     <header class="ed-list__header">
-      <p class="ed-eyebrow">{{ $kicker }}</p>
+      {{ with $kicker }}<p class="ed-eyebrow">{{ . }}</p>{{ end }}
       <h1 class="ed-list__title">{{ .Title }}</h1>
       {{ with .Content }}<div class="ed-standfirst">{{ . }}</div>{{ end }}
     </header>

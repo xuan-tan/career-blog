@@ -16,16 +16,19 @@
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
 
   /* Type scale — fluid, ratio ~1.25 text / ~1.333 display. §2 */
-  --type-hero: clamp(2.5rem, 1.6rem + 4.2vw, 4.75rem);
-  --type-display-xl: clamp(2.75rem, 1.5rem + 5.5vw, 5.5rem);
-  --type-display-l: clamp(2.25rem, 1.4rem + 3.6vw, 3.75rem);
-  --type-display-m: clamp(1.75rem, 1.2rem + 2.2vw, 2.625rem);
-  --type-h1: clamp(2rem, 1.3rem + 3vw, 3.25rem);
-  --type-h2: clamp(1.5rem, 1.15rem + 1.5vw, 2.125rem);
-  --type-h3: clamp(1.25rem, 1.1rem + 0.7vw, 1.5rem);
-  --type-h4: 1.125rem;
+  --type-hero: clamp(2.25rem, 1.44rem + 3.78vw, 4.275rem);
+  --type-display-xl: clamp(2.475rem, 1.35rem + 4.95vw, 4.95rem);
+  --type-display-l: clamp(2.025rem, 1.26rem + 3.24vw, 3.375rem);
+  --type-display-m: clamp(1.575rem, 1.08rem + 1.98vw, 2.3625rem);
+  --type-h1: clamp(1.8rem, 1.17rem + 2.7vw, 2.925rem);
+  --type-h2: clamp(1.35rem, 1.035rem + 1.35vw, 1.9125rem);
+  --type-h3: clamp(1.125rem, 0.99rem + 0.63vw, 1.35rem);
+  --type-h4: 1.0625rem;
+  /* Deck: the article's opening paragraph. Between body and lead so it reads as
+     a standfirst without matching the h2 it introduces. */
+  --type-deck: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
   --type-lead: clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem);
-  --type-body: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
+  --type-body: clamp(1rem, 0.95rem + 0.15vw, 1.0625rem);
   --type-small: 0.9375rem;
   --type-caption: 0.8125rem;
   --type-meta: 0.75rem;
@@ -47,6 +50,9 @@
   --measure-body: 68ch;
   --measure-lead: 50ch;
   --measure-caption: 46ch;
+  /* Article row: text measure + TOC column + gutter. See section F.
+     Sized to 68ch of --type-body — 645px at 17px — plus 18.5rem of TOC. */
+  --article-row: 59rem;
 
   /* Tracking */
   --track-display: -0.02em;
@@ -59,10 +65,39 @@
   --space-heading-bottom: 0.5em;
   --space-block: 2.5rem;
   --space-section: 4.5rem;
+  /* Table cells. Vertical is the point; horizontal stays tight so a 6-column
+     spec table still fits the measure. */
+  --space-cell-y: 0.8em;
+  --space-cell-x: 0.45em;
+
+  /* Control box. One button shape site-wide: this padding plus --radius-pill. */
+  --space-control-y: 0.625rem;
+  --space-control-x: 1.75rem;
+
+  /* Clearance under the theme's fixed header. Any surface that starts at
+     the top of the viewport offsets by this, in both directions. */
+  --header-offset: 148px;
+
+  /* Scrims over photography. Shared: the editorial hero, full-width image
+     blocks and the home rail all darken an image so text can sit on it.
+     Value lives here once; the compositions that stack them do not. */
+  --scrim-photo: linear-gradient(
+    to top,
+    rgb(0 0 0 / 0.7) 0%,
+    rgb(0 0 0 / 0.1) 60%,
+    rgb(0 0 0 / 0.1) 100%
+  );
+  --scrim-card: linear-gradient(
+    to top,
+    rgb(0 0 0 / 0.9) 0%,
+    rgb(0 0 0 / 0.5) 55%,
+    transparent 100%
+  );
 
   /* Radii — near-zero. Editorial pages are not app chrome. */
   --radius-sm: 2px;
   --radius-md: 3px;
+  --radius-pill: 999px;
 
   /* ---------- Ink ramp: DARK is the default (site defaultAppearance) ---------- */
   --surface-0: #1b1a18;
@@ -103,6 +138,15 @@ html:not(.dark) {
    is created and `position: sticky` keeps working. */
 html {
   overflow-x: clip;
+}
+
+/* Full-bleed breakout, one definition. Anything meant to reach both
+   viewport edges adds this class instead of repeating the pair.
+   Only works while <body> spans the viewport — see §9 of the design
+   system before clipping an ancestor. */
+.ed-bleed {
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
 }
 
 /* UI chrome (nav, buttons, badges) inherits Inter from the theme's
@@ -295,6 +339,11 @@ hr {
   color: var(--ink-3);
 }
 
+/* Same voice, sitting on a photograph rather than a surface. */
+.ed-eyebrow--on-photo {
+  color: var(--on-photo-ink);
+}
+
 /* ---- Meta line on editorial cards ----
    Two deliberate ranks so it reads as information rather than a run of
    identical labels:
@@ -393,7 +442,6 @@ hr {
   font-family: var(--font-text);
   font-size: var(--type-lead);
   line-height: var(--leading-lead);
-  max-width: var(--measure-body);
   color: var(--ink-2);
 }
 
@@ -408,10 +456,16 @@ hr {
 }
 
 /* Body copy under the deck is one rank down: --type-lead -> --type-body.
-   Also drops from the secondary ink to the body ink. */
+   Also drops from the secondary ink to the body ink.
+
+   The measure sits here, on the text, not on the container: `ch` resolves
+   against the element's own font-size, so a measure on the lead-sized
+   container computes ~985px and lets 19px body copy run to ~95 characters
+   a line. Each run carries the measure it is actually read at. */
 .ed-standfirst p {
   font-size: var(--type-body);
   line-height: var(--leading-body);
+  max-width: var(--measure-body);
   color: var(--ink-1);
 }
 
@@ -517,12 +571,62 @@ hr {
   margin-bottom: 3.5rem;
 }
 .ed-list__title {
-  font-size: var(--type-display-l);
+  font-size: var(--type-h1);
   line-height: var(--leading-display);
   letter-spacing: var(--track-display);
   font-weight: var(--weight-display);
   color: var(--ink-0);
   margin: 0.5rem 0 0;
+}
+
+/* Cell padding. Typography's default is 8.5px top/bottom with a flush first
+   column; the row band needs more air than that to read as a row. */
+.prose :is(th, td),
+.prose-invert :is(th, td) {
+  padding: var(--space-cell-y) var(--space-cell-x);
+}
+.prose :is(th, td):first-child,
+.prose-invert :is(th, td):first-child {
+  padding-inline-start: 0.5rem;
+}
+.prose :is(th, td):last-child,
+.prose-invert :is(th, td):last-child {
+  padding-inline-end: 0.5rem;
+}
+
+/* Banded rows. A spec table is read row-wise, and hairlines alone lose the eye
+   on a 30-row geometry chart. The band is --surface-1 — one step off the page,
+   so it reads as rhythm, not colour. */
+.prose tbody tr:nth-child(even),
+.prose-invert tbody tr:nth-child(even) {
+  background-color: var(--surface-1);
+}
+/* The band replaces the need for a rule under every cell; keep only the
+   header's. */
+.prose tbody td,
+.prose-invert tbody td {
+  border-bottom: 0;
+}
+
+/* Masthead copy. A section index is a shelf, not an article: the intro says
+   where you are, then gets out of the way of the cards. Deck stays at lead
+   scale as the one large line; everything under it drops to small print so
+   the feature and card titles below keep the hierarchy they already have.
+   Scoped to the list header — article decks and the feature standfirst keep
+   the reading scale. */
+.ed-list__header .ed-standfirst p {
+  font-size: var(--type-small);
+  line-height: var(--leading-body);
+  max-width: var(--measure-body);
+  color: var(--ink-2);
+}
+/* The deck keeps its rank: it is the one line allowed to be large. */
+.ed-list__header .ed-standfirst > .lead,
+.ed-list__header .ed-standfirst > p:first-child {
+  font-size: var(--type-lead);
+  line-height: var(--leading-lead);
+  max-width: var(--measure-lead);
+  color: var(--ink-2);
 }
 
 /* Feature: full-width banner, then title left / standfirst right.
@@ -758,6 +862,558 @@ hr {
   .ed-card:nth-child(2) .ed-card__media {
     aspect-ratio: 3 / 2;
   }
+}
+
+/* ============================================================
+   E. HOME HERO — full-bleed landing
+   ------------------------------------------------------------
+   The one surface that is not editorial reading flow: a photographic
+   landing with an anchor column and a card rail. It lives here (not in
+   custom.css) because it is a page-level composition built from tokens,
+   not a shortcode.
+
+   Every value used to be inline in layouts/partials/home/custom.html.
+   Nothing here may reintroduce a raw colour or length — see
+   .design-system.md §10 for the conventions this encodes.
+   ============================================================ */
+
+/* ---------- E1. Hero tokens ---------- */
+:root {
+  /* Backdrop. Only visible before the photo paints, or if it is missing,
+     so it reads as a neutral plate in each mode rather than a colour. */
+  --hero-plate: #0f172a;
+  --hero-plate-light: #f5f5f0;
+
+  /* Veil. One base colour per mode, six alphas: the horizontal gradient
+     holds the anchor column legible and lets the rail breathe; the
+     vertical one anchors the bottom edge. */
+  --hero-veil: 15 23 42;
+  --hero-veil-x0: 0.85;
+  --hero-veil-x1: 0.4;
+  --hero-veil-x2: 0.7;
+  --hero-veil-y0: 0.6;
+  --hero-veil-y1: 0.2;
+  --hero-veil-light: 245 245 240;
+  --hero-veil-light-x0: 0.85;
+  --hero-veil-light-x1: 0.2;
+  --hero-veil-light-x2: 0.5;
+  --hero-veil-light-y0: 0.5;
+  --hero-veil-light-y1: 0.15;
+
+  /* Geometry. Header clearance comes from --header-offset (shared). */
+  --hero-anchor-w: 30%;
+  --hero-anchor-pad: 5vw;
+  --hero-anchor-max: 380px;
+  --hero-rail-inset: 15vw;
+
+  /* Landing title. Sized in vh on purpose: it is a viewport composition,
+     not a document heading, so it scales with the window, not the measure. */
+  --type-hero-landing: clamp(3rem, 12.5vh, 6.5rem);
+  --measure-hero-lede: 340px;
+
+  /* Card rail. Shared by every breakpoint. */
+  --hero-card-w: auto;
+  --hero-card-h: 35vh;
+  --hero-card-ratio: 2 / 3;
+  --hero-card-radius: 16px;
+  --hero-card-gap: 12px;
+  --hero-card-shadow: 0 12px 40px rgb(0 0 0 / 0.4);
+  --hero-card-fallback: linear-gradient(135deg, #334155, #1e293b);
+
+  /* Hero ink. The anchor column sits on a photograph, not on a surface,
+     so it does not use the surface ink ramp: contrast is against an image
+     whose brightness we cannot know. Near-white / near-black only. */
+  --hero-ink: #fff;
+  --hero-ink-dim: rgb(255 255 255 / 0.65);
+  --hero-ghost-line: rgb(255 255 255 / 0.35);
+  --hero-ghost-line-hi: rgb(255 255 255 / 0.55);
+  --hero-ghost-fill: rgb(255 255 255 / 0.08);
+
+  /* Chrome over photography — mode-independent white, because it is always
+     over an image, never over a surface. Shared by any control or label
+     that sits on a photo; hero ink above is different because it is driven
+     by the mode-dependent veil. */
+  --on-photo-line: rgb(255 255 255 / 0.25);
+  --on-photo-line-hi: rgb(255 255 255 / 0.55);
+  --on-photo-ink: rgb(255 255 255 / 0.5);
+  --on-photo-ink-hi: #fff;
+  --on-photo-dim: rgb(255 255 255 / 0.35);
+}
+
+html:not(.dark) {
+  --hero-ink: #1a1a1a;
+  --hero-ink-dim: rgb(0 0 0 / 0.6);
+  --hero-ghost-line: rgb(0 0 0 / 0.25);
+  --hero-ghost-line-hi: rgb(0 0 0 / 0.4);
+  --hero-ghost-fill: rgb(0 0 0 / 0.05);
+}
+
+/* ---------- E2. Shell ---------- */
+
+/* Full-bleed breakout. --50vw + 50% only lands on the viewport edge while
+   <body> is the containing block's full width — which is why the scroll
+   lock below must not be applied to <body> (it is max-w-7xl there, and
+   clipping at that box leaves bare plate down both sides). */
+.ed-hero {
+  position: relative;
+  z-index: 1;
+  margin-top: calc(var(--header-offset) * -1);
+  height: 100vh;
+  overflow: hidden;
+  background: var(--hero-plate);
+}
+html:not(.dark) .ed-hero {
+  background: var(--hero-plate-light);
+}
+
+/* Scroll lock. Desktop only — below that the hero stacks and the page
+   must scroll. Clip, not hidden: no scroll container is created, so
+   nothing sticky inside the page breaks. :has() scopes it to the one
+   page that renders a hero. */
+@media (min-width: 1024px) {
+  html:has(.ed-hero) {
+    overflow: clip;
+  }
+}
+
+/* ---------- E3. Backdrop + veil ---------- */
+.ed-hero__bg {
+  position: absolute;
+  inset: 0;
+}
+.ed-hero__bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.ed-hero__bg--light {
+  display: none;
+}
+html:not(.dark) .ed-hero__bg--light {
+  display: block;
+}
+html:not(.dark) .ed-hero__bg--dark {
+  display: none;
+}
+
+.ed-hero__veil {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      to right,
+      rgb(var(--hero-veil) / var(--hero-veil-x0)) 0,
+      rgb(var(--hero-veil) / var(--hero-veil-x1)) 50%,
+      rgb(var(--hero-veil) / var(--hero-veil-x2)) 100%
+    ),
+    linear-gradient(
+      to top,
+      rgb(var(--hero-veil) / var(--hero-veil-y0)) 0,
+      transparent 50%,
+      rgb(var(--hero-veil) / var(--hero-veil-y1)) 100%
+    );
+}
+html:not(.dark) .ed-hero__veil {
+  background:
+    linear-gradient(
+      to right,
+      rgb(var(--hero-veil-light) / var(--hero-veil-light-x0)) 0,
+      rgb(var(--hero-veil-light) / var(--hero-veil-light-x1)) 50%,
+      rgb(var(--hero-veil-light) / var(--hero-veil-light-x2)) 100%
+    ),
+    linear-gradient(
+      to top,
+      rgb(var(--hero-veil-light) / var(--hero-veil-light-y0)) 0,
+      transparent 50%,
+      rgb(var(--hero-veil-light) / var(--hero-veil-light-y1)) 100%
+    );
+}
+
+/* ---------- E4. Row: anchor | rail ---------- */
+.ed-hero__row {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  height: 100%;
+  padding-top: var(--header-offset);
+}
+
+/* ---------- E5. Anchor column ---------- */
+.ed-hero__anchor {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: var(--hero-anchor-w);
+  padding-left: var(--hero-anchor-pad);
+}
+.ed-hero__anchor-inner {
+  max-width: var(--hero-anchor-max);
+}
+.ed-hero__title {
+  font-family: var(--font-display);
+  font-size: var(--type-hero-landing);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  margin-bottom: 0.75rem;
+  color: var(--hero-ink);
+}
+.ed-hero__lede {
+  font-family: var(--font-text);
+  font-size: var(--type-small);
+  font-weight: var(--weight-light);
+  line-height: 1.7;
+  max-width: var(--measure-hero-lede);
+  color: var(--hero-ink-dim);
+}
+.ed-hero__cta {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  margin-top: 1.75rem;
+}
+
+/* Ghost button — the hero's only control. Outline only, per the
+   no-decoration principle; it distinguishes by weight, not fill. */
+.ed-btn-ghost {
+  display: inline-block;
+  font-family: var(--font-meta);
+  font-size: var(--type-micro);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: var(--space-control-y) var(--space-control-x);
+  border: 1px solid var(--hero-ghost-line);
+  border-radius: var(--radius-pill);
+  color: var(--hero-ink);
+  transition: background-color 300ms, border-color 300ms;
+}
+.ed-btn-ghost:hover {
+  border-color: var(--hero-ghost-line-hi);
+  background: var(--hero-ghost-fill);
+}
+
+/* ---------- E6. Card rail ---------- */
+.ed-hero__rail {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  width: calc(100% - var(--hero-anchor-w));
+}
+.ed-hero__rail-inner {
+  width: 100%;
+}
+.ed-hero__vp {
+  overflow: hidden;
+  padding-left: var(--hero-rail-inset);
+}
+.ed-hero__track {
+  display: flex;
+  gap: var(--hero-card-gap);
+  transition: transform 500ms ease-out;
+}
+
+/* Card. The rail is a single row of equal plates cut off by the viewport
+   edge — the cut is the affordance, so no card is full-width. */
+.ed-hero-card {
+  position: relative;
+  display: block;
+  flex-shrink: 0;
+  width: var(--hero-card-w);
+  height: var(--hero-card-h);
+  aspect-ratio: var(--hero-card-ratio);
+  border-radius: var(--hero-card-radius);
+  overflow: hidden;
+  box-shadow: var(--hero-card-shadow);
+  text-decoration: none;
+}
+.ed-hero-card__bg {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background: var(--hero-card-fallback);
+  background-size: cover;
+  background-position: center;
+}
+/* Falls back to a glyph only when the section has no featured image. */
+.ed-hero-card__glyph {
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  opacity: 0.65;
+  user-select: none;
+  pointer-events: none;
+}
+.ed-hero-card__scrim {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 35%;
+  padding: 1rem 1.25rem;
+  background: var(--scrim-card);
+}
+/* Label = the site eyebrow voice, on a photo. Only the clamp is local. */
+.ed-hero-card__label {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+.ed-hero-card__title {
+  margin-top: 0.25rem;
+  font-family: var(--font-display);
+  font-size: var(--type-small);
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--on-photo-ink-hi);
+}
+
+/* ---------- E7. Rail controls ---------- */
+.ed-hero__nav {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin-top: 1rem;
+  padding-left: var(--hero-rail-inset);
+}
+.ed-nav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: 1px solid var(--on-photo-line);
+  border-radius: var(--radius-pill);
+  background: none;
+  color: var(--on-photo-ink);
+  cursor: pointer;
+  transition: border-color 200ms, color 200ms;
+}
+.ed-nav-btn:hover {
+  border-color: var(--on-photo-line-hi);
+  color: var(--on-photo-ink-hi);
+}
+.ed-nav-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+.ed-nav-btn svg {
+  width: 0.625rem;
+  height: 0.625rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.ed-hero__meter {
+  flex: 1;
+  max-width: 5rem;
+  height: 1px;
+  margin-left: 0.25rem;
+  background: rgb(255 255 255 / 0.15);
+}
+.ed-hero__meter-fill {
+  height: 100%;
+  background: var(--on-photo-line-hi);
+  transition: width 500ms;
+}
+.ed-hero__idx {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: var(--type-micro);
+  color: var(--on-photo-dim);
+}
+
+/* ---------- E8. Stacked layout ---------- */
+@media (max-width: 1023px) {
+  .ed-hero {
+    height: auto;
+    min-height: 100vh;
+  }
+  .ed-hero__row {
+    flex-direction: column;
+  }
+  .ed-hero__anchor {
+    justify-content: center;
+    width: 100%;
+    padding: 3.75rem 1.5rem 1.5rem;
+    text-align: center;
+  }
+  .ed-hero__anchor-inner {
+    max-width: 100%;
+  }
+  .ed-hero__lede {
+    margin: 0 auto;
+  }
+  .ed-hero__cta {
+    justify-content: center;
+  }
+  .ed-hero__rail {
+    justify-content: center;
+    width: 100%;
+    padding-bottom: 2.5rem;
+  }
+  .ed-hero__rail-inner {
+    width: auto;
+    max-width: 100%;
+  }
+  .ed-hero__vp {
+    padding-left: 0;
+  }
+  .ed-hero__track {
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+  .ed-hero-card {
+    width: 6.25rem;
+    height: 9.375rem;
+    scroll-snap-align: start;
+  }
+  .ed-hero__nav {
+    justify-content: center;
+    margin-top: 0.75rem;
+    padding-left: 0;
+  }
+}
+
+/* ---------- F. ARTICLE PAGE ---------- */
+/* Blowfish's single.html puts the article and the TOC in one `.prose` row.
+   Tailwind Typography caps `.prose` at 65ch — on this row the cap lands on the
+   *pair*, not on the text. Measured at a 1512px viewport: row 712px, split into
+   452px of text + 260px of TOC, 312px of dead space to its right, and body copy
+   at ~50 characters against a 68ch design measure.
+
+   So: lift the cap off the row, give the measure to the text column, and centre
+   the pair in the content column. The header takes the same width so its left
+   edge lands on the text column's.
+   Row = text measure (68ch) + TOC column (16rem, incl. its 2rem padding) + 2.5rem gutter.
+   See .design-system.md §7 "The article row". */
+main#main-content > article > header#single_header,
+main#main-content > article > section.prose {
+  max-width: var(--article-row);
+  margin-inline: auto;
+}
+main#main-content > article > section.prose {
+  gap: 2.5rem;}
+/* `lg:ms-auto` shoved the TOC to the far right; the row is centred now. */
+main#main-content > article > section.prose > div:first-child {
+  margin-left: 0;
+}
+/* No TOC on the page: drop the empty column so the text still centres. */
+main#main-content > article:not(:has(.toc)) > header#single_header,
+main#main-content > article:not(:has(.toc)) > section.prose {
+  max-width: calc(var(--article-row) - 18.5rem);
+}
+main#main-content > article > section.prose > div:last-child {
+  flex: 1 1 auto;
+  max-width: calc(var(--article-row) - 18.5rem);
+}
+main#main-content > article > section.prose .article-content {
+  max-width: none;
+}
+/* Header copy keeps the reading measure, flush with the text column. */
+main#main-content > article > header#single_header > * {
+  max-width: calc(var(--article-row) - 18.5rem);
+}
+
+/* Deck — the opening paragraph of an article, before the first section head.
+   One rank up (--type-lead), secondary ink, lead measure. Applies only when the
+   post actually opens with a paragraph: a post that starts with a hero or the
+   `lead` shortcode is left alone, because then <p> is not the first child.
+   Margin is left to the heading's own top space, so the gap is one decision. */
+main#main-content > article > section.prose .article-content > p:first-child {
+  font-size: var(--type-deck);
+  line-height: var(--leading-lead);
+  font-style: italic;
+  max-width: var(--measure-lead);
+  color: var(--ink-2);
+  margin-bottom: 0;
+  /* Hairline closes the preamble. It spans the deck's own measure, so it reads
+     as the end of that block rather than a rule across the page. */
+  padding-bottom: 1.15rem;
+  border-bottom: 1px solid var(--ink-4);
+}
+/* The rule now does the separating, so the heading needs less top space. */
+main#main-content > article > section.prose .article-content > p:first-child + h2 {
+  margin-top: 2rem;
+}
+
+/* Related cards. The theme's own card is a bordered tile with a fixed 150px
+   thumbnail and the article's h2 sizing inside a ~200px column — measured
+   204x594, nearly 1:3. Bring it onto the card scale: 3:2 image, title one rank
+   down, meta and summary on the small end, no box. */
+main#main-content > article > section.prose .article-link--related {
+  border: 1px solid var(--ink-4);
+  border-radius: 0.5rem;
+  background: none;
+}
+main#main-content > article > section.prose .thumbnail_card_related {
+  height: auto;
+  aspect-ratio: 1 / 1;
+}
+main#main-content > article > section.prose .article-link--related h2 {
+  font-size: var(--type-h4);
+  line-height: var(--leading-heading);
+  letter-spacing: var(--track-body);
+  /* The heading top-space (2.5em = 42px) is a prose rule; inside a card it was
+     a 72px hole between the thumbnail and its own title. */
+  margin-top: 0;
+  margin-bottom: 0.15rem;
+}
+main#main-content > article > section.prose .article-link--related .text-sm {
+  font-size: var(--type-meta);
+  line-height: var(--leading-meta);
+}
+main#main-content > article > section.prose .article-link__summary,
+main#main-content > article > section.prose .article-link__summary p {
+  font-size: var(--type-caption);
+  line-height: var(--leading-caption);
+  color: var(--ink-2);
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+/* Hairline between the tag row and the summary — same rule weight as the
+   metadata bar on list cards. */
+main#main-content > article > section.prose .article-link__summary {
+  margin-top: 0.6rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--ink-4);
+}
+/* Tag badges carry the theme's own ring; bring them onto the ink ramp so they
+   read as chrome rather than a second accent. */
+main#main-content > article > section.prose .article-link--related .text-sm a span {
+  border-color: var(--ink-4);
+  color: var(--ink-2);
+  font-size: var(--type-micro);
+}
+
+/* Sidebar TOC. Blowfish sets no size on it — it inherits the 19px prose body,
+   so the navigation reads as loud as the article. A nav list belongs on the
+   meta scale; the article keeps the hierarchy. 19px -> 12px is -37%. */
+main#main-content > article > section.prose .toc {
+  font-size: var(--type-meta);
+  line-height: var(--leading-meta);
+  letter-spacing: normal;
+}
+main#main-content > article > section.prose .toc a {
+  font-size: inherit;
+  color: var(--ink-2);
+}
+main#main-content > article > section.prose .toc a.active {
+  color: var(--ink-0);
+}
+main#main-content > article > section.prose .toc ul ul {
+  margin-top: 0.35em;
 }
 
 /* ---------- G. INTERACTIVE: annotated image (bike-hotspots) ----------

@@ -1,6 +1,6 @@
 ---
 title: "Speedster for the Sister"
-weight: 0
+weight: 4
 draft: false
 description: ""
 tags: ["bikes", "mechanical"]

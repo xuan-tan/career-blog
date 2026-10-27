@@ -1,6 +1,6 @@
 ---
 title: "Relic of the Mechanical Era"
-weight: 5
+weight: 3
 draft: false
 description: "A build around an aluminium colnago"
 tags: ["bikes","gravel","2023"]
