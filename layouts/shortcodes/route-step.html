@@ -1,0 +1,262 @@
+{{/* route-step.html — one map segment in a scrollytelling sequence.
+
+  The article alternates prose and map segments:
+
+    <prose paragraph>
+    {{< route-step km="11" caption="..." >}}
+    <prose paragraph>
+    {{< route-step km="22" >}}
+    ...
+
+  Each step owns the route between the previous step's km and its own. The map
+  is pinned while that step's wrapper scrolls; the segment draws as you go and
+  stops at its km, then the next prose block arrives.
+
+  Basemap: MapLibre GL + OpenFreeMap (no key, OSM vector tiles). `style` picks
+  liberty | bright | positron — positron is the neutral one and the default.
+
+  Shared data: pass `data` on the first step (default "route.json", a page
+  bundle resource). Later steps reuse it; pass `data` again only when the
+  sequence switches tracks (e.g. a different day's ride).
+*/}}
+
+{{- $data := .Get "data" | default "route.json" -}}
+{{- $km := .Get "km" | default "0" -}}
+{{- $height := .Get "height" | default "220" -}}
+{{- $style := .Get "style" | default "positron" -}}
+{{- $caption := .Get "caption" | default "" -}}
+{{- $uid := printf "rs-%d" .Ordinal -}}
+
+{{- $url := "" -}}
+{{- with .Page.Resources.GetMatch $data -}}
+  {{- $url = .RelPermalink -}}
+{{- else -}}
+  {{- $url = printf "%s%s" $.Page.RelPermalink $data -}}
+{{- end -}}
+
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.css">
+<script src="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.js" defer></script>
+
+<figure class="ed-step ed-bleed" id="{{ $uid }}" data-ed-step data-km="{{ $km }}" data-style="{{ $style }}" data-src="{{ $url }}" style="--step-height: {{ $height }}vh">
+  <div class="ed-step__sticky">
+    <div class="ed-step__map" data-map></div>
+    <div class="ed-step__hud" data-hud><b data-km-now>0.0</b> km</div>
+  </div>
+  {{- with $caption }}<figcaption>{{ . | markdownify }}</figcaption>{{ end -}}
+</figure>
+
+<script>
+(function () {
+  if (window.__edStepBooted) return;
+  window.__edStepBooted = true;
+
+  var wide = window.matchMedia('(min-width: 768px)');
+  var steps = [];
+  var cache = {};
+
+  var STYLES = {
+    liberty: 'https://tiles.openfreemap.org/styles/liberty',
+    bright: 'https://tiles.openfreemap.org/styles/bright',
+    positron: 'https://tiles.openfreemap.org/styles/positron'
+  };
+
+  function load(url) {
+    if (!cache[url]) {
+      cache[url] = fetch(url).then(function (r) {
+        if (!r.ok) throw new Error('route ' + r.status);
+        return r.json();
+      });
+    }
+    return cache[url];
+  }
+
+  /* The article column is not viewport-centred (the TOC sits beside it), so
+     cancel its left edge and take the full viewport width. */
+  function fitBleed(fig) {
+    fig.style.marginLeft = '0px';
+    var left = fig.getBoundingClientRect().left;
+    fig.style.width = document.documentElement.clientWidth + 'px';
+    fig.style.marginLeft = (-left) + 'px';
+    if (fig.__map) fig.__map.resize();
+  }
+
+  function nearestIndex(kmArr, target) {
+    var lo = 0, hi = kmArr.length - 1;
+    while (lo < hi) {
+      var mid = (lo + hi) >> 1;
+      if (kmArr[mid] < target) lo = mid + 1; else hi = mid;
+    }
+    return lo;
+  }
+
+  function line(coords) {
+    return { type: 'Feature', properties: {}, geometry: { type: 'LineString', coordinates: coords } };
+  }
+
+  function init(fig, prevKm) {
+    if (fig.dataset.ready) return;
+    fig.dataset.ready = '1';
+
+    var endKm = parseFloat(fig.dataset.km || '0');
+    var mapEl = fig.querySelector('[data-map]');
+    var hud = fig.querySelector('[data-hud]');
+    var hudKm = fig.querySelector('[data-km-now]');
+
+    load(fig.dataset.src).then(function (data) {
+      if (typeof maplibregl === 'undefined') throw new Error('maplibre');
+
+      // GeoJSON wants [lng, lat]
+      var pts = data.points.map(function (p) { return [p[1], p[0]]; });
+      var kmArr = data.km || [];
+      var i0 = nearestIndex(kmArr, prevKm);
+      var i1 = Math.max(i0 + 1, nearestIndex(kmArr, endKm));
+      if (i1 >= pts.length) i1 = pts.length - 1;
+      var seg = pts.slice(i0, i1 + 1);
+
+      var lngs = seg.map(function (c) { return c[0]; });
+      var lats = seg.map(function (c) { return c[1]; });
+      var bounds = [[Math.min.apply(null, lngs), Math.min.apply(null, lats)],
+                    [Math.max.apply(null, lngs), Math.max.apply(null, lats)]];
+
+      var map = new maplibregl.Map({
+        container: mapEl,
+        style: STYLES[fig.dataset.style] || STYLES.positron,
+        bounds: bounds,
+        fitBoundsOptions: { padding: 64, animate: false },
+        // Guided map, not an explorable one: no wheel-zoom, no drag. The map
+        // fills the viewport, so any pointer capture would steal the page scroll
+        // and stop the route advancing.
+        interactive: false,
+        attributionControl: false,
+        zoomSnap: 0,
+        // lets the canvas be screenshotted (export stills for social, and makes
+        // headless visual checks possible)
+        preserveDrawingBuffer: true
+      });
+      fig.__map = map;
+
+      map.addControl(new maplibregl.AttributionControl({
+        compact: true,
+        customAttribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      }), 'bottom-right');
+
+      map.on('load', function () {
+        map.addSource('base', { type: 'geojson', data: line(pts) });
+        map.addSource('seg', { type: 'geojson', data: line(seg) });
+        map.addSource('head', { type: 'geojson', data: { type: 'Feature', properties: {}, geometry: { type: 'Point', coordinates: seg[0] } } });
+
+        map.addLayer({ id: 'base', type: 'line', source: 'base',
+          paint: { 'line-color': '#8a7f70', 'line-width': 1.4, 'line-opacity': 0.5 } });
+        map.addLayer({ id: 'casing', type: 'line', source: 'seg',
+          layout: { 'line-cap': 'round', 'line-join': 'round' },
+          paint: { 'line-color': '#fbf9f6', 'line-width': 9, 'line-opacity': 0.9 } });
+        map.addLayer({ id: 'drawn', type: 'line', source: 'seg',
+          layout: { 'line-cap': 'round', 'line-join': 'round' },
+          paint: { 'line-color': '#b5532e', 'line-width': 4 } });
+        map.addLayer({ id: 'head', type: 'circle', source: 'head',
+          paint: { 'circle-radius': 5, 'circle-color': '#b5532e', 'circle-stroke-width': 2, 'circle-stroke-color': '#fbf9f6' } });
+
+        function syncTheme() {
+          var isDark = document.documentElement.classList.contains('dark');
+          mapEl.classList.toggle('is-dark', isDark);
+          if (!map.getLayer('casing')) return;
+          map.setPaintProperty('casing', 'line-color', isDark ? '#1b1a18' : '#fbf9f6');
+          map.setPaintProperty('head', 'circle-stroke-color', isDark ? '#1b1a18' : '#fbf9f6');
+        }
+        syncTheme();
+        new MutationObserver(syncTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+
+        if (!wide.matches) {
+          hud.style.display = 'none';
+          return;
+        }
+
+        function update() {
+          var r = fig.getBoundingClientRect();
+          var span = fig.offsetHeight - window.innerHeight;
+          var p = span > 0 ? (0 - r.top) / span : 0;
+          p = Math.max(0, Math.min(1, p));
+          // Advance by distance, not by point count: Douglas-Peucker leaves more
+          // points in the curves, so index-proportional progress reads wrong.
+          var targetKm = kmArr[i0] + p * (kmArr[i1] - kmArr[i0]);
+          var i = Math.max(0, Math.min(seg.length - 1, nearestIndex(kmArr, targetKm) - i0));
+          var slice = seg.slice(0, i + 1);
+
+          map.getSource('seg').setData(line(slice.length > 1 ? slice : [seg[0], seg[0]]));
+          map.getSource('head').setData({ type: 'Feature', properties: {}, geometry: { type: 'Point', coordinates: seg[i] } });
+          hudKm.textContent = (kmArr[i0 + i] != null ? kmArr[i0 + i] : 0).toFixed(1);
+          hud.style.opacity = r.top < window.innerHeight && r.bottom > 0 ? '1' : '0';
+        }
+
+        fig.__update = update;
+        update();
+      });
+    }).catch(function () {
+      mapEl.innerHTML = '<p class="ed-step__fail">Map unavailable — download the track instead.</p>';
+    });
+  }
+
+  function boot() {
+    steps = Array.prototype.slice.call(document.querySelectorAll('[data-ed-step]'));
+    if (!steps.length) return;
+
+    function applyLayout() {
+      // Phone: one static map for the first step, the rest collapse to prose.
+      var mobile = !wide.matches;
+      steps.forEach(function (s, i) { s.classList.toggle('is-collapsed', mobile && i > 0); });
+    }
+    applyLayout();
+    wide.addEventListener('change', applyLayout);
+
+    if (!wide.matches) {
+      init(steps[0], 0);
+      return;
+    }
+
+    // A new data file means a new track: the running km restarts at zero.
+    var prev = 0, prevSrc = null;
+    var prevKms = steps.map(function (fig) {
+      if (prevSrc !== null && fig.dataset.src !== prevSrc) prev = 0;
+      prevSrc = fig.dataset.src;
+      var p = prev;
+      prev = parseFloat(fig.dataset.km || '0');
+      return p;
+    });
+    steps.forEach(fitBleed);
+
+    if (!('IntersectionObserver' in window)) {
+      steps.forEach(function (fig, i) { init(fig, prevKms[i]); });
+      return;
+    }
+    // Several maps on one page: build each one only when it is nearly in view.
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        var i = steps.indexOf(e.target);
+        if (i > -1) { init(steps[i], prevKms[i]); io.unobserve(e.target); }
+      });
+    }, { rootMargin: '120% 0px' });
+    steps.forEach(function (fig) { io.observe(fig); });
+  }
+
+  function onScroll() {
+    if (!wide.matches) return;
+    steps.forEach(function (fig) { if (fig.__update) fig.__update(); });
+  }
+
+  var ticking = false;
+  window.addEventListener('scroll', function () {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () { ticking = false; onScroll(); });
+  }, { passive: true });
+
+  window.addEventListener('resize', function () {
+    steps.forEach(function (fig) { if (!fig.classList.contains('is-collapsed')) fitBleed(fig); });
+    onScroll();
+  });
+
+  if (document.readyState === 'complete') boot();
+  else window.addEventListener('load', boot);
+})();
+</script>
