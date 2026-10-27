@@ -17,6 +17,11 @@
 
   x / y are percentages of the image box (pin centre). Cards open on click;
   below 768px the whole thing falls back to a numbered list under the photo.
+
+  In `hugo server` only, a "Pin mode" toolbar renders under the figure: click the
+  image to drop a pin, drag any pin to move it, then Copy YAML and paste over the
+  block in the markdown. Nothing is written to disk — the dev server is read-only,
+  so the toolbar and the item dump never reach a production build.
 */}}
 
 {{- $src := .Get "src" | default "" -}}
@@ -45,7 +50,9 @@
   {{- end -}}
 {{- end -}}
 
-<figure class="ed-hotspots" data-ed-hotspots>
+{{- $dev := hugo.IsServer -}}
+<figure class="ed-hotspots" data-ed-hotspots
+  {{- if $dev }} data-dev="1" data-src="{{ $src }}" data-alt="{{ $alt }}" data-caption="{{ $caption }}"{{ end }}>
   <div class="ed-hotspots__stage">
     <img class="ed-hotspots__img" src="{{ $url }}" alt="{{ $alt }}" loading="lazy" decoding="async">
     <svg class="ed-hotspots__leader" aria-hidden="true" data-leader><line x1="0" y1="0" x2="0" y2="0"></line></svg>
@@ -74,9 +81,22 @@
         {{- with $it.body }}<div class="ed-hotspot__body">{{ . | markdownify }}</div>{{ end -}}
       </div>
     {{- end }}
+    {{- if $dev }}
+      <script type="application/json" data-hotspot-src>{{ $items | jsonify }}</script>
+    {{- end }}
   </div>
 
   {{- with $caption }}<figcaption>{{ . | markdownify }}</figcaption>{{ end -}}
+
+  {{- if $dev }}
+    <div class="ed-hotspots__dev">
+      <button type="button" class="ed-hotspots__btn" data-dev-toggle aria-pressed="false">Pin mode</button>
+      <button type="button" class="ed-hotspots__btn" data-dev-undo>Undo</button>
+      <button type="button" class="ed-hotspots__btn" data-dev-copy>Copy YAML</button>
+      <span class="ed-hotspots__hint" data-dev-hint></span>
+      <textarea class="ed-hotspots__out" data-dev-out spellcheck="false" hidden></textarea>
+    </div>
+  {{- end }}
   <noscript>
     <style>
       .ed-hotspots__leader, .ed-hotspot__pin { display: none !important; }
@@ -142,6 +162,7 @@
 
     function open(i) {
       if (!wide.matches) return;
+      if (fig.classList.contains('is-placing')) return;
       if (openIdx === i) return close();
       close();
       openIdx = i;
@@ -160,6 +181,193 @@
     stage.addEventListener('click', close);
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
     wide.addEventListener('change', close);
+
+    /* ── pin placer (hugo server only) ───────────────────────────────────────
+       Percentages, rounded to one decimal, in the same space the template uses:
+       the stage box is the image box, so what he clicks is what lands. Existing
+       items keep their label/value/body because the template dumps them as JSON;
+       new pins get a TODO label placeholder. Copy YAML replaces coords only.
+
+       Everything below `if ($dev)` is Hugo template output, not a JS string, so a
+       production build ships none of it. */
+    {{- if $dev }}
+    if (fig.dataset.dev !== '1') return;
+
+    var dump = fig.querySelector('[data-hotspot-src]');
+    var items = [];
+    try {
+      // jsonify inside a <script> block is emitted as a JS string literal, so the
+      // payload arrives quoted and escaped: decode twice, tolerate either shape.
+      items = JSON.parse(dump.textContent);
+      if (typeof items === 'string') items = JSON.parse(items);
+    } catch (err) { items = []; }
+    if (!Array.isArray(items)) items = [];
+
+    var toggle = fig.querySelector('[data-dev-toggle]');
+    var undoBtn = fig.querySelector('[data-dev-undo]');
+    var copyBtn = fig.querySelector('[data-dev-copy]');
+    var hint = fig.querySelector('[data-dev-hint]');
+    var out = fig.querySelector('[data-dev-out]');
+    var coords = items.map(function (it) { return { x: Number(it.x) || 0, y: Number(it.y) || 0 }; });
+    var edited = false;
+
+    function pad(n) { return (n < 10 ? '0' : '') + n; }
+    function pct1(v) { return Math.round(v * 10) / 10; }
+    function num(v) { var r = pct1(v); return String(r); }
+    function placing() { return fig.classList.contains('is-placing'); }
+
+    function point(e) {
+      var r = stage.getBoundingClientRect();
+      return {
+        x: clamp01((e.clientX - r.left) / r.width * 100),
+        y: clamp01((e.clientY - r.top) / r.height * 100)
+      };
+    }
+    function clamp01(v) { return Math.max(0, Math.min(100, v)); }
+
+    function paint(pin, c) {
+      pin.style.setProperty('--x', c.x + '%');
+      pin.style.setProperty('--y', c.y + '%');
+      pin.title = num(c.x) + '%, ' + num(c.y) + '%';
+    }
+
+    function wrap(text, width) {
+      var words = String(text).replace(/\s+/g, ' ').trim().split(' ');
+      var lines = [], line = '';
+      words.forEach(function (w) {
+        if (line && (line + ' ' + w).length > width) { lines.push(line); line = w; }
+        else { line = line ? line + ' ' + w : w; }
+      });
+      if (line) lines.push(line);
+      return lines;
+    }
+
+    function yaml() {
+      var lines = [];
+      coords.forEach(function (c, i) {
+        var it = items[i] || {};
+        lines.push('- x: ' + num(c.x));
+        lines.push('  y: ' + num(c.y));
+        lines.push('  label: ' + (it.label || 'TODO label'));
+        if (it.value) lines.push('  value: ' + String(it.value).replace(/\s+/g, ' ').trim());
+        if (it.body) {
+          lines.push('  body: >-');
+          wrap(it.body, 76).forEach(function (l) { lines.push('    ' + l); });
+        }
+      });
+      return lines.join('\n');
+    }
+
+    function refresh() {
+      out.value = yaml();
+      out.hidden = !placing();
+      edited = false;
+    }
+
+    function renumber() {
+      pins.forEach(function (p, i) {
+        var n = p.querySelector('.ed-hotspot__num');
+        if (n) n.textContent = pad(i + 1);
+      });
+    }
+
+    function drag(pin, i) {
+      pin.addEventListener('pointerdown', function (e) {
+        if (!placing() || e.button !== 0) return;
+        e.preventDefault();
+        e.stopPropagation();
+        var id = e.pointerId;
+        try { pin.setPointerCapture(id); } catch (err) {}
+        function move(ev) { coords[i] = point(ev); paint(pin, coords[i]); }
+        function up() {
+          window.removeEventListener('pointermove', move);
+          window.removeEventListener('pointerup', up);
+          try { pin.releasePointerCapture(id); } catch (err) {}
+          refresh();
+        }
+        window.addEventListener('pointermove', move);
+        window.addEventListener('pointerup', up);
+      });
+    }
+
+    function addPin(x, y) {
+      var i = coords.length;
+      var pin = document.createElement('button');
+      pin.type = 'button';
+      pin.className = 'ed-hotspot__pin is-new';
+      pin.setAttribute('data-pin', '');
+      pin.setAttribute('aria-expanded', 'false');
+      pin.innerHTML = '<span class="ed-hotspot__num">' + pad(i + 1) + '</span>';
+      coords.push({ x: x, y: y });
+      paint(pin, coords[i]);
+      stage.appendChild(pin);
+      pins.push(pin);
+      drag(pin, i);
+      hints('Pin ' + (i + 1) + ' at ' + num(x) + '%, ' + num(y) + '% — drag to fine-tune.');
+      refresh();
+      return pin;
+    }
+
+    function hints(msg) {
+      hint.textContent = msg || (placing()
+        ? 'Click the image to add a pin · drag any pin to move it.'
+        : '');
+    }
+
+    out.addEventListener('input', function () { edited = true; });
+
+    pins.forEach(function (pin, i) { paint(pin, coords[i] || { x: 0, y: 0 }); drag(pin, i); });
+
+    toggle.addEventListener('click', function () {
+      var on = !placing();
+      fig.classList.toggle('is-placing', on);
+      toggle.setAttribute('aria-pressed', on ? 'true' : 'false');
+      if (on) close();
+      hints();
+      refresh();
+    });
+
+    stage.addEventListener('pointerdown', function (e) {
+      if (!placing() || e.button !== 0) return;
+      if (e.target.closest('[data-pin]') || e.target.closest('[data-card]')) return;
+      if (e.target.tagName === 'line') return;
+      e.preventDefault();
+      var p = point(e);
+      addPin(pct1(p.x), pct1(p.y));
+    });
+
+    undoBtn.addEventListener('click', function () {
+      for (var i = pins.length - 1; i >= 0; i--) {
+        if (!pins[i].classList.contains('is-new')) continue;
+        pins[i].remove();
+        pins.splice(i, 1);
+        coords.splice(i, 1);
+        renumber();
+        refresh();
+        hints('Removed pin ' + (i + 1) + '.');
+        return;
+      }
+      hints('Nothing new to undo — those pins are in the markdown.');
+    });
+
+    copyBtn.addEventListener('click', function () {
+      // If he has hand-edited the textarea, that is the truth; otherwise rebuild
+      // from the live pin positions so labels can never go stale against x/y.
+      var text = edited ? out.value : yaml();
+      out.value = text;
+      out.hidden = false;
+      function done() { hints('Copied — paste over the pin list in the markdown.'); }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, function () { out.select(); done(); });
+      } else {
+        out.select();
+        try { document.execCommand('copy'); } catch (err) {}
+        done();
+      }
+    });
+
+    hints();
+    {{- end }}
   });
 })();
 </script>
