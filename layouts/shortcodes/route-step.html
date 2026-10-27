@@ -34,8 +34,11 @@
   {{- $url = printf "%s%s" $.Page.RelPermalink $data -}}
 {{- end -}}
 
+{{- if not (.Page.Store.Get "edMaplibreAssets") -}}
+{{- .Page.Store.Set "edMaplibreAssets" true -}}
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.css">
 <script src="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.js" defer></script>
+{{- end -}}
 
 <figure class="ed-step ed-bleed" id="{{ $uid }}" data-ed-step data-km="{{ $km }}" data-style="{{ $style }}" data-src="{{ $url }}" style="--step-height: {{ $height }}vh">
   <div class="ed-step__sticky">
@@ -45,6 +48,8 @@
   {{- with $caption }}<figcaption>{{ . | markdownify }}</figcaption>{{ end -}}
 </figure>
 
+{{- if not (.Page.Store.Get "edStepScript") -}}
+{{- .Page.Store.Set "edStepScript" true -}}
 <script>
 (function () {
   if (window.__edStepBooted) return;
@@ -260,3 +265,4 @@
   else window.addEventListener('load', boot);
 })();
 </script>
+{{- end -}}
