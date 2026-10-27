@@ -1,0 +1,165 @@
+{{/* bike-hotspots.html — annotated image with numbered pins and callout cards.
+
+  Usage (inner content is YAML, not markdown):
+
+    {{< bike-hotspots src="featured.JPG" alt="The bike, mid-dust" caption="Six decisions that made this ride work." >}}
+    - x: 60
+      y: 75
+      label: Tyres
+      value: 32 mm file tread
+      body: The frame's clearance ceiling. Anything wider and the stays pack with clay.
+    - x: 37
+      y: 15
+      label: Seatpost
+      value: Titanium, zero setback
+      body: Keeps weight over the rear wheel on loose climbs.
+    {{< /bike-hotspots >}}
+
+  x / y are percentages of the image box (pin centre). Cards open on click;
+  below 768px the whole thing falls back to a numbered list under the photo.
+*/}}
+
+{{- $src := .Get "src" | default "" -}}
+{{- $alt := .Get "alt" | default "" -}}
+{{- $caption := .Get "caption" | default "" -}}
+{{- $uid := printf "hs-%d" .Ordinal -}}
+{{- $items := slice -}}
+{{- with .Inner -}}
+  {{- $parsed := . | transform.Unmarshal -}}
+  {{- if reflect.IsSlice $parsed -}}{{- $items = $parsed -}}{{- end -}}
+{{- end -}}
+
+{{- $url := "" -}}
+{{- $res := .Page.Resources.GetMatch $src -}}
+{{- if $res -}}
+  {{- if gt $res.Width 1800 -}}
+    {{- $url = ($res.Resize "1800x q88").RelPermalink -}}
+  {{- else -}}
+    {{- $url = $res.RelPermalink -}}
+  {{- end -}}
+{{- else -}}
+  {{- with resources.GetMatch (printf "**/%s" $src) -}}
+    {{- $url = .RelPermalink -}}
+  {{- else -}}
+    {{- $url = printf "%s%s" $.Page.RelPermalink $src -}}
+  {{- end -}}
+{{- end -}}
+
+<figure class="ed-hotspots" data-ed-hotspots>
+  <div class="ed-hotspots__stage">
+    <img class="ed-hotspots__img" src="{{ $url }}" alt="{{ $alt }}" loading="lazy" decoding="async">
+    <svg class="ed-hotspots__leader" aria-hidden="true" data-leader><line x1="0" y1="0" x2="0" y2="0"></line></svg>
+
+    {{- range $i, $it := $items }}
+      {{- $n := printf "%02d" (add $i 1) -}}
+      {{- $cardId := printf "%s-c%d" $uid $i -}}
+      <button
+        class="ed-hotspot__pin"
+        type="button"
+        data-pin
+        style="--x: {{ $it.x }}%; --y: {{ $it.y }}%;"
+        aria-expanded="false"
+        aria-controls="{{ $cardId }}">
+        <span class="ed-hotspot__num">{{ $n }}</span>
+        <span class="ed-hotspot__tag">{{ $it.label }}</span>
+      </button>
+
+      <div class="ed-hotspot__card" id="{{ $cardId }}" data-card>
+        <div class="ed-hotspot__card-head">
+          <span class="ed-hotspot__num ed-hotspot__num--sm">{{ $n }}</span>
+          <p class="ed-hotspot__title">{{ $it.label }}</p>
+          <button class="ed-hotspot__close" type="button" data-close aria-label="Close">×</button>
+        </div>
+        {{- with $it.value }}<p class="ed-hotspot__value">{{ . }}</p>{{ end -}}
+        {{- with $it.body }}<div class="ed-hotspot__body">{{ . | markdownify }}</div>{{ end -}}
+      </div>
+    {{- end }}
+  </div>
+
+  {{- with $caption }}<figcaption>{{ . | markdownify }}</figcaption>{{ end -}}
+  <noscript>
+    <style>
+      .ed-hotspots__leader, .ed-hotspot__pin { display: none !important; }
+      .ed-hotspot__card { position: static !important; display: block !important; width: auto !important; margin-top: 1rem; }
+    </style>
+  </noscript>
+</figure>
+
+<script>
+(function () {
+  document.querySelectorAll('[data-ed-hotspots]').forEach(function (fig) {
+    if (fig.dataset.ready) return;
+    fig.dataset.ready = '1';
+
+    var stage = fig.querySelector('.ed-hotspots__stage');
+    var line = fig.querySelector('[data-leader] line');
+    var pins = Array.prototype.slice.call(fig.querySelectorAll('[data-pin]'));
+    var cards = Array.prototype.slice.call(fig.querySelectorAll('[data-card]'));
+    var wide = window.matchMedia('(min-width: 768px)');
+    var openIdx = -1;
+
+    function close() {
+      pins.forEach(function (p) { p.setAttribute('aria-expanded', 'false'); });
+      cards.forEach(function (c) { c.classList.remove('is-open'); });
+      stage.classList.remove('has-open');
+      line.setAttribute('x2', 0); line.setAttribute('y2', 0);
+      line.style.opacity = '0';
+      openIdx = -1;
+    }
+
+    function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+
+    function place(card, pin) {
+      var s = stage.getBoundingClientRect();
+      var p = pin.getBoundingClientRect();
+      var dotX = p.left - s.left + p.width / 2;
+      var dotY = p.top - s.top + p.height / 2;
+
+      card.classList.add('is-open');
+      var w = card.offsetWidth, h = card.offsetHeight;
+      var gap = 46, pad = 10;
+      var side, left, top;
+
+      if (s.width - dotX > w + gap + pad) { side = 'right'; left = dotX + gap; }
+      else if (dotX > w + gap + pad) { side = 'left'; left = dotX - gap - w; }
+      else { side = 'below'; left = clamp(dotX - w / 2, pad, s.width - w - pad); }
+
+      if (side === 'below') top = clamp(dotY + gap, pad, s.height - h - pad);
+      else top = clamp(dotY - h * 0.38, pad, s.height - h - pad);
+
+      card.style.left = left + 'px';
+      card.style.top = top + 'px';
+      card.dataset.side = side;
+
+      var x2 = side === 'right' ? left : side === 'left' ? left + w : dotX;
+      var y2 = side === 'below' ? top : clamp(dotY, top + 14, top + h - 14);
+
+      line.setAttribute('x1', dotX); line.setAttribute('y1', dotY);
+      line.setAttribute('x2', x2); line.setAttribute('y2', y2);
+      line.style.opacity = '1';
+      stage.classList.add('has-open');
+    }
+
+    function open(i) {
+      if (!wide.matches) return;
+      if (openIdx === i) return close();
+      close();
+      openIdx = i;
+      pins[i].setAttribute('aria-expanded', 'true');
+      place(cards[i], pins[i]);
+    }
+
+    pins.forEach(function (pin, i) {
+      pin.addEventListener('click', function (e) { e.stopPropagation(); open(i); });
+    });
+    cards.forEach(function (card) {
+      var btn = card.querySelector('[data-close]');
+      if (btn) btn.addEventListener('click', function (e) { e.stopPropagation(); close(); });
+      card.addEventListener('click', function (e) { e.stopPropagation(); });
+    });
+    stage.addEventListener('click', close);
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
+    wide.addEventListener('change', close);
+  });
+})();
+</script>

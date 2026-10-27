@@ -1415,3 +1415,294 @@ main#main-content > article > section.prose .toc a.active {
 main#main-content > article > section.prose .toc ul ul {
   margin-top: 0.35em;
 }
+
+/* ---------- G. INTERACTIVE: annotated image (bike-hotspots) ----------
+   Numbered pins over a photo, one callout card open at a time, joined to the
+   pin by a leader line. Data (x/y %, label, value, body) lives in the
+   shortcode; all positioning is JS at runtime.
+
+   Below 768px — and with no JS — the pins disappear and the cards become a
+   numbered list under the image. Same content, no hover requirement. */
+
+.ed-hotspots {
+  margin: 2.75rem 0 3.25rem;
+}
+
+.ed-hotspots__stage {
+  position: relative;
+  background: var(--surface-1);
+}
+
+.ed-hotspots__img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.ed-hotspots__leader {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+  overflow: visible;
+}
+.ed-hotspots__leader line {
+  stroke: var(--accent);
+  stroke-width: 1.25;
+  opacity: 0;
+  transition: opacity 0.18s ease;
+}
+
+.ed-hotspot__pin {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  font-family: var(--font-meta);
+  color: var(--ink-0);
+}
+
+.ed-hotspot__num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-pill, 999px);
+  background: var(--accent);
+  color: var(--surface-0);
+  font-size: var(--type-micro);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  box-shadow: 0 0 0 4px rgb(0 0 0 / 0.18);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.ed-hotspot__num--sm {
+  width: 22px;
+  height: 22px;
+  box-shadow: none;
+  flex: 0 0 auto;
+}
+
+.ed-hotspot__tag {
+  font-size: var(--type-micro);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-1);
+  background: color-mix(in srgb, var(--surface-0) 82%, transparent);
+  border: 1px solid var(--ink-4);
+  border-radius: var(--radius-pill, 999px);
+  padding: 0.28em 0.6em;
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  white-space: nowrap;
+}
+
+.ed-hotspot__pin:hover .ed-hotspot__num,
+.ed-hotspot__pin:focus-visible .ed-hotspot__num,
+.ed-hotspot__pin[aria-expanded="true"] .ed-hotspot__num {
+  transform: scale(1.08);
+  box-shadow: 0 0 0 7px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+.ed-hotspot__pin:hover .ed-hotspot__tag,
+.ed-hotspot__pin:focus-visible .ed-hotspot__tag {
+  opacity: 1;
+  transform: translateX(0);
+}
+.ed-hotspot__pin[aria-expanded="true"] { z-index: 5; }
+
+.ed-hotspot__card {
+  display: none;
+  position: absolute;
+  z-index: 4;
+  width: 300px;
+  max-width: calc(100% - 20px);
+  padding: 1rem 1.1rem 1.15rem;
+  background: var(--surface-1);
+  border: 1px solid var(--ink-4);
+  border-radius: 10px;
+  box-shadow: 0 18px 44px rgb(0 0 0 / 0.32);
+  text-align: left;
+}
+.ed-hotspot__card.is-open { display: block; }
+
+.ed-hotspot__card-head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.55rem;
+}
+/* Card heading is a <p>, not an <h3>: the article TOC is built from the
+   rendered content's headings, and six card titles must not land in it. */
+.ed-hotspots .ed-hotspot__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--type-h3);
+  font-weight: var(--weight-heading);
+  line-height: var(--leading-heading);
+  color: var(--ink-0);
+  letter-spacing: 0;
+}
+.ed-hotspot__close {
+  margin-left: auto;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  color: var(--ink-3);
+  font-size: 1rem;
+  line-height: 1;
+  padding: 0.15rem 0.2rem;
+}
+.ed-hotspot__close:hover { color: var(--ink-0); }
+
+.ed-hotspots .ed-hotspot__value {
+  margin: 0 0 0.45rem;
+  font-family: var(--font-meta);
+  font-size: var(--type-micro);
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.ed-hotspot__body {
+  font-size: var(--type-small);
+  line-height: var(--leading-body);
+  color: var(--ink-1);
+}
+.ed-hotspots .ed-hotspot__body p { margin: 0; }
+.ed-hotspots .ed-hotspot__body p + p { margin-top: 0.5em; }
+
+.ed-hotspots figcaption {
+  margin-top: 0.75rem;
+  font-size: var(--type-caption);
+  line-height: var(--leading-caption);
+  color: var(--ink-3);
+}
+
+@media (max-width: 767px) {
+  .ed-hotspots__leader,
+  .ed-hotspot__pin { display: none; }
+
+  .ed-hotspot__card {
+    position: static;
+    display: block;
+    width: auto;
+    max-width: none;
+    margin: 0;
+    padding: 0.9rem 0 1rem;
+    background: none;
+    border: 0;
+    border-top: 1px solid var(--ink-4);
+    box-shadow: none;
+  }
+  .ed-hotspot__card:first-of-type { border-top: 0; }
+  .ed-hotspot__close { display: none; }
+}
+
+/* ---------- H. INTERACTIVE: route steps (scrollytelling) ----------
+   The article alternates prose and map segments. Each `.ed-step` is a tall
+   wrapper whose sticky child pins a map; scroll progress through the wrapper
+   draws the segment between the previous step's km and this one, then the next
+   prose block arrives.
+
+   Phone: only the first step keeps a map (static, fit to the whole route);
+   the rest collapse so the prose reads straight through. */
+
+.ed-step {
+  position: relative;
+  margin: 2.5rem 0;
+  height: var(--step-height, 115vh);
+  background: var(--surface-1);
+}
+
+.ed-step__sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.ed-step .ed-step__map {
+  position: absolute;
+  inset: 0;
+  background: var(--surface-1);
+}
+.ed-step__map .maplibregl-map {
+  font-family: var(--font-meta);
+}
+/* Positron is a light, neutral basemap and stays light in both themes — the map
+   reads as a paper inset on the dark page rather than being inverted, which
+   would also invert the route line drawn on the same canvas. */
+.ed-step__map .maplibregl-ctrl-attrib {
+  font-size: 10px;
+  background: color-mix(in srgb, var(--surface-0) 82%, transparent);
+  color: var(--ink-2);
+}
+.ed-step__map .maplibregl-ctrl-attrib a { color: var(--ink-1); }
+/* Clear the site's back-to-top button, which sits in the same corner. */
+.ed-step__map .maplibregl-ctrl-bottom-right { bottom: 3.5rem; }
+.ed-step__map .maplibregl-ctrl-attrib-button { filter: none; }
+
+.ed-step__hud {
+  position: absolute;
+  left: 1.5rem;
+  bottom: 1.25rem;
+  z-index: 500;
+  padding: 0.3rem 0.7rem;
+  background: color-mix(in srgb, var(--surface-0) 88%, transparent);
+  border: 1px solid var(--ink-4);
+  border-radius: var(--radius-pill, 999px);
+  font-family: var(--font-meta);
+  font-size: var(--type-micro);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+.ed-step__hud b {
+  font-size: var(--type-small);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--ink-0);
+}
+
+.ed-step__fail {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 2rem;
+  font-size: var(--type-small);
+  color: var(--ink-2);
+  text-align: center;
+}
+
+.ed-step figcaption {
+  max-width: 46rem;
+  margin: 0.9rem auto 0;
+  padding: 0 1.5rem;
+  font-size: var(--type-caption);
+  line-height: var(--leading-caption);
+  color: var(--ink-3);
+}
+
+.ed-step.is-collapsed { display: none; }
+
+@media (max-width: 767px) {
+  .ed-step { height: auto; }
+  .ed-step__sticky { position: relative; height: 56vh; }
+  .ed-step__hud { display: none; }
+}
