@@ -6,7 +6,6 @@ description: "Two days, two titanium bikes, and the white roads of Puglia."
 featureimage: "featured.JPG"
 tags: ["bikes", "gravel", "titanium", "Puglia", "IT", "2026", "cycling"]
 category: ["Bikes"]
-contents: true
 ---
 
 {{< lead >}}
