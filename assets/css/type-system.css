@@ -1463,7 +1463,6 @@ main#main-content > article > section.prose .toc ul ul {
   z-index: 3;
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
   padding: 0;
   border: 0;
   background: none;
@@ -1494,7 +1493,14 @@ main#main-content > article > section.prose .toc ul ul {
   flex: 0 0 auto;
 }
 
+/* Absolute, not in flow: the button box must stay the size of the number
+   circle, or the -50% centring lands the circle left of its --x/--y and the
+   leader line starts from empty space beside it. */
 .ed-hotspot__tag {
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  margin-left: 0.4rem;
   font-size: var(--type-micro);
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -1504,7 +1510,7 @@ main#main-content > article > section.prose .toc ul ul {
   border-radius: var(--radius-pill, 999px);
   padding: 0.28em 0.6em;
   opacity: 0;
-  transform: translateX(-4px);
+  transform: translate(-4px, -50%);
   transition: opacity 0.18s ease, transform 0.18s ease;
   white-space: nowrap;
 }
@@ -1518,7 +1524,7 @@ main#main-content > article > section.prose .toc ul ul {
 .ed-hotspot__pin:hover .ed-hotspot__tag,
 .ed-hotspot__pin:focus-visible .ed-hotspot__tag {
   opacity: 1;
-  transform: translateX(0);
+  transform: translate(0, -50%);
 }
 .ed-hotspot__pin[aria-expanded="true"] { z-index: 5; }
 

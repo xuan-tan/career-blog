@@ -34,8 +34,11 @@
   {{- $url = printf "%s%s" $.Page.RelPermalink $data -}}
 {{- end -}}
 
+{{- if not (.Page.Store.Get "edMaplibreAssets") -}}
+{{- .Page.Store.Set "edMaplibreAssets" true -}}
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.css">
 <script src="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.js" defer></script>
+{{- end -}}
 
 <figure class="ed-step ed-bleed" id="{{ $uid }}" data-ed-step data-km="{{ $km }}" data-style="{{ $style }}" data-src="{{ $url }}" style="--step-height: {{ $height }}vh">
   <div class="ed-step__sticky">
@@ -45,6 +48,8 @@
   {{- with $caption }}<figcaption>{{ . | markdownify }}</figcaption>{{ end -}}
 </figure>
 
+{{- if not (.Page.Store.Get "edStepScript") -}}
+{{- .Page.Store.Set "edStepScript" true -}}
 <script>
 (function () {
   if (window.__edStepBooted) return;
@@ -73,6 +78,16 @@
   /* The article column is not viewport-centred (the TOC sits beside it), so
      cancel its left edge and take the full viewport width. */
   function fitBleed(fig) {
+    // Wide-only measurement. Below the breakpoint there is no bleed, so any
+    // box measured before the window narrowed has to be dropped: a leftover
+    // 100vw width and negative offset would hang off a phone viewport after a
+    // rotate, with the canvas still sized for the old geometry.
+    if (!wide.matches) {
+      fig.style.width = '';
+      fig.style.marginLeft = '';
+      if (fig.__map) fig.__map.resize();
+      return;
+    }
     fig.style.marginLeft = '0px';
     var left = fig.getBoundingClientRect().left;
     fig.style.width = document.documentElement.clientWidth + 'px';
@@ -166,15 +181,11 @@
         syncTheme();
         new MutationObserver(syncTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
 
-        if (!wide.matches) {
-          hud.style.display = 'none';
-          return;
-        }
-
         function update() {
           var r = fig.getBoundingClientRect();
           var span = fig.offsetHeight - window.innerHeight;
-          var p = span > 0 ? (0 - r.top) / span : 0;
+          // Phone keeps one static map: draw the whole segment and leave it.
+          var p = wide.matches ? (span > 0 ? (0 - r.top) / span : 0) : 1;
           p = Math.max(0, Math.min(1, p));
           // Advance by distance, not by point count: Douglas-Peucker leaves more
           // points in the curves, so index-proportional progress reads wrong.
@@ -202,16 +213,17 @@
 
     function applyLayout() {
       // Phone: one static map for the first step, the rest collapse to prose.
+      // Un-collapsing on the way back up changes the geometry the bleed width
+      // was measured against, so re-measure every step that comes back.
       var mobile = !wide.matches;
-      steps.forEach(function (s, i) { s.classList.toggle('is-collapsed', mobile && i > 0); });
+      steps.forEach(function (s, i) {
+        s.classList.toggle('is-collapsed', mobile && i > 0);
+        fitBleed(s);
+      });
+      onScroll();
     }
     applyLayout();
     wide.addEventListener('change', applyLayout);
-
-    if (!wide.matches) {
-      init(steps[0], 0);
-      return;
-    }
 
     // A new data file means a new track: the running km restarts at zero.
     var prev = 0, prevSrc = null;
@@ -222,7 +234,6 @@
       prev = parseFloat(fig.dataset.km || '0');
       return p;
     });
-    steps.forEach(fitBleed);
 
     if (!('IntersectionObserver' in window)) {
       steps.forEach(function (fig, i) { init(fig, prevKms[i]); });
@@ -260,3 +271,4 @@
   else window.addEventListener('load', boot);
 })();
 </script>
+{{- end -}}
