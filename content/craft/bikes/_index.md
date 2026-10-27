@@ -12,10 +12,7 @@ layout: editorial-list
 Two wheels, drivetrains and a whole lot of elbow grease
 {{< /lead >}}
 
-I can remember when I started picking up cycling again. It was in the thick of Covid and Singapore had launched its "circuit-breaker" phase.
+I can remember when I started picking up cycling again. It was in the thick of Covid and Singapore had launched its "circuit-breaker" phase. I started wanting to write more about riding, the joy experienced in travelling to places, and maintaining the machine that would help me get there.
 
-Explore via [taxonomy listing]({{< ref "tags" >}}) page.
-
-_**Sidenote:** This page is just a standard Blowfish article listing and Hugo has been configured to generate a `samples` content type and display article summaries._
 
 ---

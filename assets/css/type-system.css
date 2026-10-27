@@ -16,16 +16,19 @@
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
 
   /* Type scale — fluid, ratio ~1.25 text / ~1.333 display. §2 */
-  --type-hero: clamp(2.5rem, 1.6rem + 4.2vw, 4.75rem);
-  --type-display-xl: clamp(2.75rem, 1.5rem + 5.5vw, 5.5rem);
-  --type-display-l: clamp(2.25rem, 1.4rem + 3.6vw, 3.75rem);
-  --type-display-m: clamp(1.75rem, 1.2rem + 2.2vw, 2.625rem);
-  --type-h1: clamp(2rem, 1.3rem + 3vw, 3.25rem);
-  --type-h2: clamp(1.5rem, 1.15rem + 1.5vw, 2.125rem);
-  --type-h3: clamp(1.25rem, 1.1rem + 0.7vw, 1.5rem);
-  --type-h4: 1.125rem;
+  --type-hero: clamp(2.25rem, 1.44rem + 3.78vw, 4.275rem);
+  --type-display-xl: clamp(2.475rem, 1.35rem + 4.95vw, 4.95rem);
+  --type-display-l: clamp(2.025rem, 1.26rem + 3.24vw, 3.375rem);
+  --type-display-m: clamp(1.575rem, 1.08rem + 1.98vw, 2.3625rem);
+  --type-h1: clamp(1.8rem, 1.17rem + 2.7vw, 2.925rem);
+  --type-h2: clamp(1.35rem, 1.035rem + 1.35vw, 1.9125rem);
+  --type-h3: clamp(1.125rem, 0.99rem + 0.63vw, 1.35rem);
+  --type-h4: 1.0625rem;
+  /* Deck: the article's opening paragraph. Between body and lead so it reads as
+     a standfirst without matching the h2 it introduces. */
+  --type-deck: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
   --type-lead: clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem);
-  --type-body: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
+  --type-body: clamp(1rem, 0.95rem + 0.15vw, 1.0625rem);
   --type-small: 0.9375rem;
   --type-caption: 0.8125rem;
   --type-meta: 0.75rem;
@@ -47,6 +50,9 @@
   --measure-body: 68ch;
   --measure-lead: 50ch;
   --measure-caption: 46ch;
+  /* Article row: text measure + TOC column + gutter. See section F.
+     Sized to 68ch of --type-body — 645px at 17px — plus 18.5rem of TOC. */
+  --article-row: 59rem;
 
   /* Tracking */
   --track-display: -0.02em;
@@ -59,6 +65,10 @@
   --space-heading-bottom: 0.5em;
   --space-block: 2.5rem;
   --space-section: 4.5rem;
+  /* Table cells. Vertical is the point; horizontal stays tight so a 6-column
+     spec table still fits the measure. */
+  --space-cell-y: 0.8em;
+  --space-cell-x: 0.45em;
 
   /* Control box. One button shape site-wide: this padding plus --radius-pill. */
   --space-control-y: 0.625rem;
@@ -567,6 +577,35 @@ hr {
   font-weight: var(--weight-display);
   color: var(--ink-0);
   margin: 0.5rem 0 0;
+}
+
+/* Cell padding. Typography's default is 8.5px top/bottom with a flush first
+   column; the row band needs more air than that to read as a row. */
+.prose :is(th, td),
+.prose-invert :is(th, td) {
+  padding: var(--space-cell-y) var(--space-cell-x);
+}
+.prose :is(th, td):first-child,
+.prose-invert :is(th, td):first-child {
+  padding-inline-start: 0.5rem;
+}
+.prose :is(th, td):last-child,
+.prose-invert :is(th, td):last-child {
+  padding-inline-end: 0.5rem;
+}
+
+/* Banded rows. A spec table is read row-wise, and hairlines alone lose the eye
+   on a 30-row geometry chart. The band is --surface-1 — one step off the page,
+   so it reads as rhythm, not colour. */
+.prose tbody tr:nth-child(even),
+.prose-invert tbody tr:nth-child(even) {
+  background-color: var(--surface-1);
+}
+/* The band replaces the need for a rule under every cell; keep only the
+   header's. */
+.prose tbody td,
+.prose-invert tbody td {
+  border-bottom: 0;
 }
 
 /* Masthead copy. A section index is a shelf, not an article: the intro says
@@ -1245,4 +1284,134 @@ html:not(.dark) .ed-hero__veil {
     margin-top: 0.75rem;
     padding-left: 0;
   }
+}
+
+/* ---------- F. ARTICLE PAGE ---------- */
+/* Blowfish's single.html puts the article and the TOC in one `.prose` row.
+   Tailwind Typography caps `.prose` at 65ch — on this row the cap lands on the
+   *pair*, not on the text. Measured at a 1512px viewport: row 712px, split into
+   452px of text + 260px of TOC, 312px of dead space to its right, and body copy
+   at ~50 characters against a 68ch design measure.
+
+   So: lift the cap off the row, give the measure to the text column, and centre
+   the pair in the content column. The header takes the same width so its left
+   edge lands on the text column's.
+   Row = text measure (68ch) + TOC column (16rem, incl. its 2rem padding) + 2.5rem gutter.
+   See .design-system.md §7 "The article row". */
+main#main-content > article > header#single_header,
+main#main-content > article > section.prose {
+  max-width: var(--article-row);
+  margin-inline: auto;
+}
+main#main-content > article > section.prose {
+  gap: 2.5rem;}
+/* `lg:ms-auto` shoved the TOC to the far right; the row is centred now. */
+main#main-content > article > section.prose > div:first-child {
+  margin-left: 0;
+}
+/* No TOC on the page: drop the empty column so the text still centres. */
+main#main-content > article:not(:has(.toc)) > header#single_header,
+main#main-content > article:not(:has(.toc)) > section.prose {
+  max-width: calc(var(--article-row) - 18.5rem);
+}
+main#main-content > article > section.prose > div:last-child {
+  flex: 1 1 auto;
+  max-width: calc(var(--article-row) - 18.5rem);
+}
+main#main-content > article > section.prose .article-content {
+  max-width: none;
+}
+/* Header copy keeps the reading measure, flush with the text column. */
+main#main-content > article > header#single_header > * {
+  max-width: calc(var(--article-row) - 18.5rem);
+}
+
+/* Deck — the opening paragraph of an article, before the first section head.
+   One rank up (--type-lead), secondary ink, lead measure. Applies only when the
+   post actually opens with a paragraph: a post that starts with a hero or the
+   `lead` shortcode is left alone, because then <p> is not the first child.
+   Margin is left to the heading's own top space, so the gap is one decision. */
+main#main-content > article > section.prose .article-content > p:first-child {
+  font-size: var(--type-deck);
+  line-height: var(--leading-lead);
+  font-style: italic;
+  max-width: var(--measure-lead);
+  color: var(--ink-2);
+  margin-bottom: 0;
+  /* Hairline closes the preamble. It spans the deck's own measure, so it reads
+     as the end of that block rather than a rule across the page. */
+  padding-bottom: 1.15rem;
+  border-bottom: 1px solid var(--ink-4);
+}
+/* The rule now does the separating, so the heading needs less top space. */
+main#main-content > article > section.prose .article-content > p:first-child + h2 {
+  margin-top: 2rem;
+}
+
+/* Related cards. The theme's own card is a bordered tile with a fixed 150px
+   thumbnail and the article's h2 sizing inside a ~200px column — measured
+   204x594, nearly 1:3. Bring it onto the card scale: 3:2 image, title one rank
+   down, meta and summary on the small end, no box. */
+main#main-content > article > section.prose .article-link--related {
+  border: 1px solid var(--ink-4);
+  border-radius: 0.5rem;
+  background: none;
+}
+main#main-content > article > section.prose .thumbnail_card_related {
+  height: auto;
+  aspect-ratio: 1 / 1;
+}
+main#main-content > article > section.prose .article-link--related h2 {
+  font-size: var(--type-h4);
+  line-height: var(--leading-heading);
+  letter-spacing: var(--track-body);
+  /* The heading top-space (2.5em = 42px) is a prose rule; inside a card it was
+     a 72px hole between the thumbnail and its own title. */
+  margin-top: 0;
+  margin-bottom: 0.15rem;
+}
+main#main-content > article > section.prose .article-link--related .text-sm {
+  font-size: var(--type-meta);
+  line-height: var(--leading-meta);
+}
+main#main-content > article > section.prose .article-link__summary,
+main#main-content > article > section.prose .article-link__summary p {
+  font-size: var(--type-caption);
+  line-height: var(--leading-caption);
+  color: var(--ink-2);
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+/* Hairline between the tag row and the summary — same rule weight as the
+   metadata bar on list cards. */
+main#main-content > article > section.prose .article-link__summary {
+  margin-top: 0.6rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--ink-4);
+}
+/* Tag badges carry the theme's own ring; bring them onto the ink ramp so they
+   read as chrome rather than a second accent. */
+main#main-content > article > section.prose .article-link--related .text-sm a span {
+  border-color: var(--ink-4);
+  color: var(--ink-2);
+  font-size: var(--type-micro);
+}
+
+/* Sidebar TOC. Blowfish sets no size on it — it inherits the 19px prose body,
+   so the navigation reads as loud as the article. A nav list belongs on the
+   meta scale; the article keeps the hierarchy. 19px -> 12px is -37%. */
+main#main-content > article > section.prose .toc {
+  font-size: var(--type-meta);
+  line-height: var(--leading-meta);
+  letter-spacing: normal;
+}
+main#main-content > article > section.prose .toc a {
+  font-size: inherit;
+  color: var(--ink-2);
+}
+main#main-content > article > section.prose .toc a.active {
+  color: var(--ink-0);
+}
+main#main-content > article > section.prose .toc ul ul {
+  margin-top: 0.35em;
 }
