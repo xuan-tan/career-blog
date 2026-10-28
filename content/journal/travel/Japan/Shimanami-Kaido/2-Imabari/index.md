@@ -1,7 +1,7 @@
 ---
 title: "Imabari at Dusk"
 weight: 5
-draft: false
+draft: true
 description: "Imabari"
 tags: ["2025","JP","cycling","Shimanami Kaido"]
 category: ["Travel"]

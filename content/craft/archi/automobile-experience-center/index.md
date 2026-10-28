@@ -1,7 +1,7 @@
 ---
 title: "Automobile Experience Center"
 weight: 4
-draft: false
+draft: true
 description: "Dismantling the egocentrism of the automobile culture — a speculative project for a car-free Singapore future"
 tags: [ "Y4","Architecture",]
 category: ["Archi"]

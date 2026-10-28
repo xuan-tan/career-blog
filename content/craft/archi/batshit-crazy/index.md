@@ -1,7 +1,7 @@
 ---
 title: "A Bat-shit Crazy House"
 weight: 2
-draft: false
+draft: true
 description: "Toward a model of multi-species coexistence — a design research project exploring cohabitation with bats through an irreverent reinterpretation of the Eames House"
 tags: ["Y5","Thesis","Architecture","Multi-species","Design Research"]
 category: ["Archi"]

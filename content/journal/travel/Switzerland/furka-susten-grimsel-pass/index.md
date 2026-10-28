@@ -1,7 +1,7 @@
 ---
 title: "Route: Furka, Grimsel & Susten 3-Day Loop"
 weight: 10
-draft: false
+draft: true
 description: "Day-by-day breakdown of the Swiss Alps 3-day pass loop — Susten, Grimsel, and Furka"
 tags: ["swiss-alps", "route", "cycling", "tour", "2026"]
 series: ["Swiss Alps 2026"]

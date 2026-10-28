@@ -1,7 +1,7 @@
 ---
 title: "A Marufukuro Dream"
 weight: 5
-draft: false
+draft: true
 description: "Starting at Onomichi"
 slug: "mfk"
 tags: ["2025","JP","Kyoto"]

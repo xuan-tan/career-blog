@@ -1,7 +1,7 @@
 ---
 title: "Tropical Roof"
 weight: 6
-draft: false
+draft: true
 description: "BendBoo — a large tropical roof exploring bamboo as a sustainable structural material"
 tags: ["Architecture", "B.Arch", "Bamboo", "Tropical Design"]
 category: ["Archi"]

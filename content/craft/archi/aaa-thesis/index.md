@@ -1,7 +1,7 @@
 ---
 title: "A Multi-species Architecture"
 weight: 1
-draft: false
+draft: true
 description: "Beyond an anthropocentric conception of our natural and built environment"
 tags: ["Y5","Thesis"]
 category: ["Archi"]

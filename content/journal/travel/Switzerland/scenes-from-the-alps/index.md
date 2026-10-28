@@ -1,7 +1,7 @@
 ---
 title: Scenes From the Alps
 date: 2026-05-24
-draft: false
+draft: true
 layout: editorial
 description: Three passes, three days, one ridge at a time — a photo journal from the Susten, Grimsel, and Furka loop.
 tags:

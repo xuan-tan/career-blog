@@ -1,7 +1,7 @@
 ---
 title: "Kamikochi Rock"
 weight: 5
-draft: false
+draft: true
 description: "Starting at Onomichi"
 slug: "kamikochi"
 tags: ["2024","JP","Nagano","Hiking"]
