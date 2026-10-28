@@ -1,7 +1,7 @@
 ---
 title: "Urban Bicycle Hub"
 weight: 8
-draft: true
+draft: false
 description: "The Third Pace — an experimental bicycle hub typology exploring divergent perceptions of speed and space"
 tags: ["Architecture", "B.Arch", "Cycling", "Singapore", "Design Research"]
 category: ["Archi"]

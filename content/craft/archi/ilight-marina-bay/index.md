@@ -1,7 +1,7 @@
 ---
 title: "iLight Marina Bay 2017"
 weight: 7
-draft: true
+draft: false
 description: "Waves — a tropical pavilion structure for Singapore's largest sustainable light art festival"
 tags: ["Architecture", "Pavilion", "Digital Fabrication", "Singapore"]
 category: ["Archi"]

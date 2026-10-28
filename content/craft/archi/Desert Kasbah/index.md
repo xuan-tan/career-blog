@@ -1,7 +1,7 @@
 ---
 title: "Regenerative Desert Kasbah"
 weight: 3
-draft: true
+draft: false
 description: "Spatial experiments in additive architecture using clay — a digitally fabricated Kasbah for the Moroccan desert"
 tags: ["Y4","Thesis","Architecture","Digital Fabrication","Clay"]
 category: ["Archi"]
