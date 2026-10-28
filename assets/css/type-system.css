@@ -620,6 +620,16 @@ hr {
   color: var(--route-ink);
   text-decoration: none;
 }
+
+/* Forced-colors modes remap every colour to a system ink, so the route colour
+   cannot separate a link from body copy there — the underline has to come back
+   or links vanish into the text. */
+@media (forced-colors: active) {
+  .prose a,
+  .prose-invert a {
+    text-decoration: underline;
+  }
+}
 .prose a:hover,
 .prose-invert a:hover,
 .prose a:focus-visible,
