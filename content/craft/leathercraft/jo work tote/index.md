@@ -1,7 +1,7 @@
 ---
 title: "Landscape Work Tote"
 weight: 1
-draft: false
+draft: true
 description: "New Zealand"
 tags: ["2023", "leather"]
 category: ["Craft"]

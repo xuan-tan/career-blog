@@ -1,7 +1,7 @@
 ---
 title: "Blow by Biwa-ko"
 weight: 5
-draft: false
+draft: true
 description: "Biwako"
 slug: "biwako"
 tags: ["2025","JP","Cycling"]

@@ -1,7 +1,7 @@
 ---
 title: "Gravel Dust Eaters"
 weight: 1
-draft: false
+draft: true
 description: "Two days, two titanium bikes, and the white roads of Puglia."
 featureimage: "featured.JPG"
 tags: ["bikes", "gravel", "titanium", "Puglia", "IT", "2026", "cycling"]
@@ -9,7 +9,7 @@ category: ["Bikes"]
 ---
 
 {{< lead >}}
-Two titanium road bikes, and a question that kept coming back: what happens when the road runs out?
+What so captivates one to ride on an uneven, gritty path, when smooth tarmac exists?
 {{< /lead >}}
 
 <!--
@@ -19,14 +19,9 @@ Day one (25 Aug) is the red dirt and the dogs. Day two (27 Aug) is the aqueduct.
 The bike thread interrupts day one; the water thread is day two. Both maps are live.
 -->
 
-## The sunset came first
+The first time I heard of a "Gravel Road" was the [L'Eroica](https://www.eroica.cc/en/events/leroica/). Held across various "champagne" white courses around the world, people would rock up to these events in vintage gear - leather caps, aviator goggles, wool jerseys...I was instantly captivated.
 
-- The good part was the sunset: high ground, red dirt going gold, nobody around.
-- Then we went the wrong way, and the light started to matter.
-- Nobody in this group rides in the dark, so we rushed the last stretch.
-- That's when the track turned out to be someone's driveway.
-- Dogs. An army of them, and one very large white one who was not a good boy.
-- Nothing happened. We got out. But that's the shape of the ride: reward first, then the bill.
+I was determined to take on our own gravel adventure one day. In Puglia, we got that chance. 
 
 ## Day one — the red road
 
@@ -111,6 +106,15 @@ The plan was never to buy a gravel bike. The plan was to make the road bikes sur
 - Then back out, climbing, with the light going the right colour.
 
 {{< route-step data="route-day1.json" km="31" height="220" caption="The high ground, roughly where the sunset happened." >}}
+
+## The sunset came first
+
+- The good part was the sunset: high ground, red dirt going gold, nobody around.
+- Then we went the wrong way, and the light started to matter.
+- Nobody in this group rides in the dark, so we rushed the last stretch.
+- That's when the track turned out to be someone's driveway.
+- Dogs. An army of them, and one very large white one who was not a good boy.
+- Nothing happened. We got out. But that's the shape of the ride: reward first, then the bill.
 
 - This is the part everyone remembers: the sunset, and the decision to stay for it.
 - It cost us the light. We went the wrong way, pushed the pace, and then the driveway.

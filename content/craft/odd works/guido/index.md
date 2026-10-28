@@ -1,7 +1,7 @@
 ---
 title: "New Zealand"
 weight: 5
-draft: false
+draft: true
 description: "New Zealand"
 tags: ["NZ"]
 category: ["Travel"]

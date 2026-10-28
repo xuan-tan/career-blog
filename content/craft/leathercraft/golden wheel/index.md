@@ -1,7 +1,7 @@
 ---
 title: "The Golden Wheel Sewing Machine"
 weight: 5
-draft: false
+draft: true
 description: "New Zealand"
 tags: ["2021","Machines"]
 category: ["Craft"]

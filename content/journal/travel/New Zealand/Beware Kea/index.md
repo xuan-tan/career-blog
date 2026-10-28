@@ -1,7 +1,7 @@
 ---
 title: "Beware the Kea!"
 weight: 6
-draft: false
+draft: true
 description: "Into Milford Sound"
 tags: ["2024","NZ","Birding"]
 category: ["Travel"]

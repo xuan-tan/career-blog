@@ -9,4 +9,4 @@ aliases:
   - "/blog/travel/japan/"
 ---
 
-The Far East Islands.
+Islands of the far east.

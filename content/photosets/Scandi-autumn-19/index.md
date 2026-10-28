@@ -1,7 +1,7 @@
 ---
 title: "Of Red Roofs"
 weight: 5
-draft: false
+draft: true
 description: "New Zealand"
 tags: ["2019","Sweden","Scandinavia","Travel"]
 category: ["Photography"]

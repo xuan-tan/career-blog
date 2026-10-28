@@ -1,7 +1,7 @@
 ---
 title: "Auckland is Walkable"
 weight: 2
-draft: false
+draft: true
 description: "Auckland largest city"
 tags: ["2024", "NZ", "Cities"]
 category: ["Travel"]

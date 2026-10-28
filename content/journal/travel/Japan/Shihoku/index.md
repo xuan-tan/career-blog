@@ -1,7 +1,7 @@
 ---
 title: "Birds of Shikoku"
 weight: 15
-draft: false
+draft: true
 description: "exploring birds of shikoku"
 tags: ["2025","JP","Birding"]
 category: ["Travel"]

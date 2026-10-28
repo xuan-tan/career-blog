@@ -1,7 +1,7 @@
 ---
 title: "Bike Prep & Packing"
 weight: 20
-draft: false
+draft: true
 description: "Pre-flight checklist for the Swiss Alps — drivetrain, wheels, electronics, and packing"
 tags: ["swiss-alps", "cycling", "prep", "packing", "2026"]
 series: ["Swiss Alps 2026"]

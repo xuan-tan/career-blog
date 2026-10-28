@@ -1,7 +1,7 @@
 ---
 title: "3 Months Prep for 3 Alpine Days"
 weight: 30
-draft: false
+draft: true
 description: "12-week training plan building up to the Furka, Grimsel & Susten pass ride — torque capacity, sustained climbing, and back-to-back durability"
 tags: ["training", "swiss-alps", "cycling", "plan", "2026"]
 series: ["Swiss Alps 2026"]

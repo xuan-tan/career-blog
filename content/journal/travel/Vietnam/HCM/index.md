@@ -1,7 +1,7 @@
 ---
 title: "Ho Chi Minh"
 weight: 5
-draft: false
+draft: true
 description: "HCM"
 tags: ["CH","2026"]
 category: ["Travel",]

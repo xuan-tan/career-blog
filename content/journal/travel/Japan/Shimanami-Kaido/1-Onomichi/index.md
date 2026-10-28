@@ -2,7 +2,7 @@
 title: "The Blue Line"
 weight: 4
 series_order: 1
-draft: false
+draft: true
 description: "Starting at Onomichi"
 tags: ["2025","JP","cycling","Shimanami Kaido"]
 category: ["Travel"]
