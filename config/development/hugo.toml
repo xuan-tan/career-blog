@@ -1,0 +1,5 @@
+# Development overrides — used by `hugo server` only (HUGO_ENVIRONMENT=development).
+# The published site builds with the production environment, where these stay false,
+# so `draft: true` pages are visible locally and never leave this machine.
+buildDrafts = true
+buildFuture = true
