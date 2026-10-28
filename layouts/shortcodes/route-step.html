@@ -165,11 +165,15 @@
         map.addLayer({ id: 'casing', type: 'line', source: 'seg',
           layout: { 'line-cap': 'round', 'line-join': 'round' },
           paint: { 'line-color': '#fbf9f6', 'line-width': 9, 'line-opacity': 0.9 } });
+        /* Read the route ink from the type system so the line and the prose
+           links can never drift apart. */
+        var routeInk = (getComputedStyle(document.documentElement)
+          .getPropertyValue('--route-ink') || '#b5532e').trim();
         map.addLayer({ id: 'drawn', type: 'line', source: 'seg',
           layout: { 'line-cap': 'round', 'line-join': 'round' },
-          paint: { 'line-color': '#b5532e', 'line-width': 4 } });
+          paint: { 'line-color': routeInk, 'line-width': 4 } });
         map.addLayer({ id: 'head', type: 'circle', source: 'head',
-          paint: { 'circle-radius': 5, 'circle-color': '#b5532e', 'circle-stroke-width': 2, 'circle-stroke-color': '#fbf9f6' } });
+          paint: { 'circle-radius': 5, 'circle-color': routeInk, 'circle-stroke-width': 2, 'circle-stroke-color': '#fbf9f6' } });
 
         function syncTheme() {
           var isDark = document.documentElement.classList.contains('dark');
